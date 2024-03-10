@@ -2,6 +2,7 @@
 
 #include "TBPBaseWeapon.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "GameFramework/Character.h"
 
 ATBPBaseWeapon::ATBPBaseWeapon()
 {
@@ -34,3 +35,40 @@ bool ATBPBaseWeapon::IsFiring() const
 }
 
 void ATBPBaseWeapon::MakeShot() {}
+
+bool ATBPBaseWeapon::GetProjectileTraceData(FVector& TraceStart, FVector& TraceEnd) const
+{
+	UWorld* World = GetWorld();
+	ACharacter* Player = Cast<ACharacter>(GetOwner());
+	APlayerController* Controller = Player ? Player->GetController<APlayerController>() : nullptr;
+	if(!World || !Player || !Controller)
+	{
+		return false;
+	}
+	
+	FVector ViewLocation;
+	FRotator ViewRotation;
+	Controller->GetPlayerViewPoint(ViewLocation, ViewRotation);
+	
+	const FTransform SocketTransform = WeaponMesh->GetSocketTransform(MuzzleSocketName);
+	const FVector TraceStartCamera = ViewLocation;
+	TraceStart = SocketTransform.GetLocation();
+	const FVector ShootDirection = ViewRotation.Vector(); //SocketTransform.GetRotation().GetForwardVector();
+	const FVector CameraTraceEnd = TraceStartCamera + ShootDirection * TraceMaxDistance;
+	
+	FHitResult HitResult;
+	FCollisionQueryParams CollisionParams;
+	CollisionParams.AddIgnoredActor(Player);
+	World->LineTraceSingleByChannel(HitResult, TraceStartCamera, CameraTraceEnd, ECollisionChannel::ECC_Visibility, CollisionParams);
+
+	if(HitResult.bBlockingHit)
+	{
+		TraceEnd = HitResult.ImpactPoint;
+	}
+	else
+	{
+		TraceEnd = CameraTraceEnd;
+	}
+	
+	return true;
+}

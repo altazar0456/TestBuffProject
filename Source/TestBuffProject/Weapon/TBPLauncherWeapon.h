@@ -6,6 +6,8 @@
 #include "TBPBaseWeapon.h"
 #include "TBPLauncherWeapon.generated.h"
 
+class ATBPProjectile;
+
 UCLASS()
 class ATBPLauncherWeapon : public ATBPBaseWeapon
 {
@@ -15,5 +17,8 @@ public:
 	virtual void StartFire() override;
 	
 protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
+	TSubclassOf<ATBPProjectile> ProjectileClass;
+	
 	virtual void MakeShot() override;
 };

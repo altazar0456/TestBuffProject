@@ -39,6 +39,7 @@ void UTBPWeaponComponent::SpawnWeapon()
 	const FName WeaponSocketName = FName(TEXT("WeaponSocket"));
 	
 	CurrentWeapon->AttachToComponent(Character->GetMesh(), AttachmentRules, WeaponSocketName);
+	CurrentWeapon->SetOwner(GetOwner());
 }
 
 void UTBPWeaponComponent::StartFire()
