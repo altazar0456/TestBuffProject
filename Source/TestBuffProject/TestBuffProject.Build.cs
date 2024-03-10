@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+// Test Buff Project. All Rights Reserved.
 
 using UnrealBuildTool;
 
@@ -9,5 +9,6 @@ public class TestBuffProject : ModuleRules
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "HeadMountedDisplay" });
+		PublicIncludePaths.AddRange(new string[] { "TestBuffProject"});
 	}
 }

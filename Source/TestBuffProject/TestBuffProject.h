@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+// Test Buff Project. All Rights Reserved.
 
 #pragma once
 
