@@ -3,6 +3,8 @@
 #include "TBPProjectile.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "Health/TBPHealthComponent.h"
+#include "Player/TBPBaseCharacter.h"
 
 ATBPProjectile::ATBPProjectile()
 {
@@ -43,7 +45,14 @@ void ATBPProjectile::OnProjectileHit(UPrimitiveComponent* PrimitiveComponent, AA
 
 	MovementComponent->StopMovementImmediately();
 
-	//TODO: Make buff to all characters nearby
+	//TODO: replace code nearby - Make buff to all characters nearby
+	//TODO: use interfaces
+	ATBPBaseCharacter* Character = Cast<ATBPBaseCharacter>(Actor);
+	if(Character)
+	{
+		Character->HealthComponent->ApplyDamage(20.0f);
+	}
+	// TODO: End TODO:
 
 	Destroy();
 }

@@ -6,7 +6,9 @@
 #include "GameFramework/Character.h"
 #include "TBPBaseCharacter.generated.h"
 
+class UTBPHealthComponent;
 class UTBPWeaponComponent;
+class UWidgetComponent;
 
 UCLASS()
 class TESTBUFFPROJECT_API ATBPBaseCharacter : public ACharacter
@@ -15,11 +17,19 @@ class TESTBUFFPROJECT_API ATBPBaseCharacter : public ACharacter
 public:
 	ATBPBaseCharacter();
 
-protected:
+	//TODO: Move to protected
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
-	UTBPWeaponComponent* WeaponComponent = nullptr;
+	UTBPHealthComponent* HealthComponent;
+protected:
 	
-	virtual void BeginPlay();
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
+	UTBPWeaponComponent* WeaponComponent;
 	
-	virtual void OnDeath();
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
+	UWidgetComponent* HealthWidgetComponent;
+	
+	virtual void BeginPlay() override;
+	
+	void OnDeath();
+    void OnHealthChanged(float Health);
 };
