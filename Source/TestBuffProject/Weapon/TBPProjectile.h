@@ -5,6 +5,7 @@
 #include "GameFramework/Actor.h"
 #include "TBPProjectile.generated.h"
 
+class UTBPBaseBuff;
 class USphereComponent;
 class UProjectileMovementComponent;
 
@@ -22,6 +23,12 @@ protected:
 	
 	UPROPERTY(VisibleAnywhere, Category = "Weapon")
 	UProjectileMovementComponent* MovementComponent;
+
+	UPROPERTY(VisibleAnywhere, Category = "Weapon")
+	UTBPBaseBuff* Buff;
+	
+	UPROPERTY(VisibleAnywhere, Category = "Weapon")
+	float Radius = 200.0f;
 
 	virtual void BeginPlay() override;
 private:

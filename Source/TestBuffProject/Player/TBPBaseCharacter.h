@@ -9,6 +9,7 @@
 class UTBPHealthComponent;
 class UTBPWeaponComponent;
 class UWidgetComponent;
+class UTBPBuffSystemComponent;
 
 UCLASS()
 class TESTBUFFPROJECT_API ATBPBaseCharacter : public ACharacter
@@ -27,6 +28,9 @@ protected:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	UWidgetComponent* HealthWidgetComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
+	UTBPBuffSystemComponent* BuffSystemComponent;
 	
 	virtual void BeginPlay() override;
 	

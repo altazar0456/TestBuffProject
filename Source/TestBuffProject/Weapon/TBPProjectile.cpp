@@ -1,9 +1,11 @@
 ﻿// Test Buff Project. All Rights Reserved.
 
 #include "TBPProjectile.h"
+
+#include "Buff/TBPBuffSystem.h"
+#include "Buff/TBPDamageBuff.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
-#include "Health/TBPHealthComponent.h"
 #include "Player/TBPBaseCharacter.h"
 
 ATBPProjectile::ATBPProjectile()
@@ -20,6 +22,8 @@ ATBPProjectile::ATBPProjectile()
 	MovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>("MovementComponent");
 	MovementComponent->InitialSpeed = 2000.0f;
 	MovementComponent->ProjectileGravityScale = 0.0f;
+
+	Buff = CreateDefaultSubobject<UTBPDamageBuff>("Buff");
 }
 
 void ATBPProjectile::BeginPlay()
@@ -38,21 +42,15 @@ void ATBPProjectile::SetShotDirection(const FVector& Direction)
 
 void ATBPProjectile::OnProjectileHit(UPrimitiveComponent* PrimitiveComponent, AActor* Actor, UPrimitiveComponent* PrimitiveComponent1, FVector Vector, const FHitResult& HitResult)
 {
-	if(!GetWorld())
+	UWorld* World = GetWorld();
+	if(!World)
 	{
 		return;
 	}
 
 	MovementComponent->StopMovementImmediately();
 
-	//TODO: replace code nearby - Make buff to all characters nearby
-	//TODO: use interfaces
-	ATBPBaseCharacter* Character = Cast<ATBPBaseCharacter>(Actor);
-	if(Character)
-	{
-		Character->HealthComponent->ApplyDamage(20.0f);
-	}
-	// TODO: End TODO:
+	TBPBuffSystem::ApplyBuffInRadius(World, Buff, HitResult.ImpactPoint, Radius);
 
 	Destroy();
 }

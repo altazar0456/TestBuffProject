@@ -1,6 +1,8 @@
 ﻿// Test Buff Project. All Rights Reserved.
 
 #include "TBPBaseCharacter.h"
+
+#include "Buff/TBPBuffSystemComponent.h"
 #include "Health/TBPHealthComponent.h"
 #include "Weapon/TBPWeaponComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -26,6 +28,7 @@ ATBPBaseCharacter::ATBPBaseCharacter()
 	
 	HealthComponent = CreateDefaultSubobject<UTBPHealthComponent>("HealthComponent");
 	WeaponComponent = CreateDefaultSubobject<UTBPWeaponComponent>("WeaponComponent");
+	BuffSystemComponent = CreateDefaultSubobject<UTBPBuffSystemComponent>("BuffSystemComponent");
 	
 	HealthWidgetComponent = CreateDefaultSubobject<UWidgetComponent>("HealthWidgetComponent");
 	HealthWidgetComponent->SetupAttachment(GetRootComponent());
@@ -39,6 +42,8 @@ void ATBPBaseCharacter::BeginPlay()
 
 	check(HealthComponent);
 	check(WeaponComponent);
+	check(BuffSystemComponent);
+    check(HealthWidgetComponent);
 	check(GetCharacterMovement());
 	check(GetCapsuleComponent());
 	check(GetMesh());
@@ -63,6 +68,9 @@ void ATBPBaseCharacter::OnDeath()
 void ATBPBaseCharacter::OnHealthChanged(float Health)
 {	
 	const auto HealthBarWidget = Cast<UTBPHealthBarWidget>(HealthWidgetComponent->GetUserWidgetObject());
-	if (!HealthBarWidget) return;
+	if (!HealthBarWidget)
+	{
+		return;
+	}
 	HealthBarWidget->SetHealthPercent(HealthComponent->GetHealthPercent());
 }
