@@ -6,8 +6,8 @@
 #include "GameFramework/GameModeBase.h"
 #include "TBPBaseGameMode.generated.h"
 
-UCLASS(minimalapi)
-class ATBPBaseGameMode : public AGameModeBase
+UCLASS()
+class TESTBUFFPROJECT_API ATBPBaseGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 

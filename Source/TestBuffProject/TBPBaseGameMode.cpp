@@ -1,7 +1,7 @@
 // Test Buff Project. All Rights Reserved.
 
 #include "TBPBaseGameMode.h"
-#include "Characters/TBPPlayerCharacter.h"
+#include "Player/TBPPlayerCharacter.h"
 #include "UI/TBPGameHUD.h"
 
 ATBPBaseGameMode::ATBPBaseGameMode()

@@ -9,7 +9,7 @@ class USphereComponent;
 class UProjectileMovementComponent;
 
 UCLASS()
-class ATBPProjectile : public AActor
+class TESTBUFFPROJECT_API ATBPProjectile : public AActor
 {
 	GENERATED_BODY()
 public:

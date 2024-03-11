@@ -8,7 +8,7 @@
 class USkeletalMeshComponent;
 
 UCLASS()
-class ATBPBaseWeapon : public AActor
+class TESTBUFFPROJECT_API ATBPBaseWeapon : public AActor
 {
 	GENERATED_BODY()
 public:

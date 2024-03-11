@@ -9,7 +9,7 @@
 class ATBPProjectile;
 
 UCLASS()
-class ATBPLauncherWeapon : public ATBPBaseWeapon
+class TESTBUFFPROJECT_API ATBPLauncherWeapon : public ATBPBaseWeapon
 {
 	GENERATED_BODY()
 	

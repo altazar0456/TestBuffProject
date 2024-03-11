@@ -9,7 +9,7 @@
 class ATBPBaseWeapon;
 
 UCLASS()
-class UTBPWeaponComponent : public UActorComponent
+class TESTBUFFPROJECT_API UTBPWeaponComponent : public UActorComponent
 {
 	GENERATED_BODY()
 

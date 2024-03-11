@@ -7,7 +7,7 @@
 #include "TBPGameHUD.generated.h"
 
 UCLASS()
-class ATBPGameHUD : public AHUD
+class TESTBUFFPROJECT_API ATBPGameHUD : public AHUD
 {
 	GENERATED_BODY()
 	
