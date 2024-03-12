@@ -3,7 +3,6 @@
 #include "TBPBuffSystem.h"
 #include "TBPBaseBuff.h"
 #include "TBPBuffSystemComponent.h"
-#include "TBPDamageBuff.h"
 
 void TBPBuffSystem::ApplyBuffInRadius(UWorld* World, UTBPBaseBuff* Buff, const FVector& Location, float Radius)
 {

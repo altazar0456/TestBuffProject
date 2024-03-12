@@ -5,8 +5,10 @@
 #include "Health/TBPHealthComponent.h"
 #include "Player/TBPBaseCharacter.h"
 
-void UTBPDamageBuff::Apply(ATBPBaseCharacter* Target)
+void UTBPDamageBuff::Activate(ATBPBaseCharacter* Target) const
 {
+	Super::Activate(Target);
+	
 	//TODO: rewrite it
 	Target->HealthComponent->ApplyDamage(Damage);
 }

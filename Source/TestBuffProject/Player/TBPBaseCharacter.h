@@ -16,7 +16,7 @@ class TESTBUFFPROJECT_API ATBPBaseCharacter : public ACharacter
 {
 	GENERATED_BODY()
 public:
-	ATBPBaseCharacter();
+	ATBPBaseCharacter(const FObjectInitializer& ObjInit);
 
 	//TODO: Move to protected
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")

@@ -9,7 +9,7 @@
 #include "Weapon/TBPWeaponComponent.h"
 
 
-ATBPPlayerCharacter::ATBPPlayerCharacter()
+ATBPPlayerCharacter::ATBPPlayerCharacter(const FObjectInitializer& ObjInit) : Super(ObjInit)
 {
 	BaseTurnRate = 45.f;
 	BaseLookUpRate = 45.f;

@@ -3,7 +3,7 @@
 #include "TBPProjectile.h"
 
 #include "Buff/TBPBuffSystem.h"
-#include "Buff/TBPDamageBuff.h"
+#include "Buff/TBPMovementSpeedModifierBuff.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Player/TBPBaseCharacter.h"
@@ -23,7 +23,7 @@ ATBPProjectile::ATBPProjectile()
 	MovementComponent->InitialSpeed = 2000.0f;
 	MovementComponent->ProjectileGravityScale = 0.0f;
 
-	Buff = CreateDefaultSubobject<UTBPDamageBuff>("Buff");
+	Buff = CreateDefaultSubobject<UTBPMovementSpeedModifierBuff>("Buff");
 }
 
 void ATBPProjectile::BeginPlay()

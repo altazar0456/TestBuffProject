@@ -1,4 +1,6 @@
-﻿#include "TBPHealthComponent.h"
+﻿// Test Buff Project. All Rights Reserved.
+
+#include "TBPHealthComponent.h"
 
 UTBPHealthComponent::UTBPHealthComponent()
 {

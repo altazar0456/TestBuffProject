@@ -8,9 +8,11 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Movement/TBPCharacterMovementComponent.h"
 #include "UI/TBPHealthBarWidget.h"
 
-ATBPBaseCharacter::ATBPBaseCharacter()
+ATBPBaseCharacter::ATBPBaseCharacter(const FObjectInitializer& ObjInit)
+: Super(ObjInit.SetDefaultSubobjectClass<UTBPCharacterMovementComponent>(ACharacter::CharacterMovementComponentName))
 {
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 		

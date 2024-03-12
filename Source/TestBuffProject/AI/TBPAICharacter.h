@@ -15,7 +15,7 @@ class TESTBUFFPROJECT_API ATBPAICharacter : public ATBPBaseCharacter
     GENERATED_BODY()
 	
 public:
-    ATBPAICharacter();
+    ATBPAICharacter(const FObjectInitializer& ObjInit);
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "AI")
 	UBehaviorTree* BehaviorTreeAsset;

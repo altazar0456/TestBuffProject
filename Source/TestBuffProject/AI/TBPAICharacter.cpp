@@ -3,7 +3,7 @@
 #include "TBPAICharacter.h"
 #include "TBPAIController.h"
 
-ATBPAICharacter::ATBPAICharacter()
+ATBPAICharacter::ATBPAICharacter(const FObjectInitializer& ObjInit)  : Super(ObjInit)
 {
     AIControllerClass = ATBPAIController::StaticClass();
 	
