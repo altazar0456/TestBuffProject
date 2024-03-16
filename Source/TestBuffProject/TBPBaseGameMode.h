@@ -6,7 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "TBPBaseGameMode.generated.h"
 
-class UDataTable;
+class UTBPBuffSystem;
 
 UCLASS()
 class TESTBUFFPROJECT_API ATBPBaseGameMode : public AGameModeBase
@@ -17,8 +17,8 @@ public:
 	ATBPBaseGameMode();
 	virtual void StartPlay() override;
 	
-	UPROPERTY(EditDefaultsOnly, Category = "Buff")
-	UDataTable* BuffSettings = nullptr;
+	UPROPERTY(EditDefaultsOnly, Category = "Buff", meta = (EditInline))
+	UTBPBuffSystem* BuffSystem = nullptr;
 };
 
 

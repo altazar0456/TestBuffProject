@@ -9,6 +9,13 @@ UTBPDamageOverTimeBuff::UTBPDamageOverTimeBuff()
 	BuffType = ETBPBuffType::DamageOverTime;
 }
 
+void UTBPDamageOverTimeBuff::SetParameters(const FTBPBuffSettings& BuffSettings)
+{
+	Super::SetParameters(BuffSettings);	
+	
+	Damage = BuffSettings.Value;
+}
+
 void UTBPDamageOverTimeBuff::TickBuff(ATBPBaseCharacter* Target, float DeltaTime) const
 {
 	Super::TickBuff(Target, DeltaTime);

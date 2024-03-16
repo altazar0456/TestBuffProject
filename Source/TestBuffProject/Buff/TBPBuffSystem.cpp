@@ -5,12 +5,14 @@
 #include "TBPBaseBuff.h"
 #include "Weapon/TBPProjectile.h"
 #include "TBPBuffSystemComponent.h"
-#include "TBPDamageBuff.h"
-#include "TBPDamageOverTimeBuff.h"
-#include "TBPMovementSpeedModifierBuff.h"
 #include "Weapon/TBPBaseWeapon.h"
 
-void TBPBuffSystem::ApplyBuffInRadius(UWorld* World, const UTBPBaseBuff* Buff, const FVector& Location, float Radius)
+void UTBPBuffSystem::OnStartPlay()
+{
+	check(BuffSettings);
+}
+
+void UTBPBuffSystem::ApplyBuffInRadius(UWorld* World, const UTBPBaseBuff* Buff, const FVector& Location, float Radius)
 {
 	if (!World || Radius <= 0)
 	{
@@ -40,12 +42,12 @@ void TBPBuffSystem::ApplyBuffInRadius(UWorld* World, const UTBPBaseBuff* Buff, c
 	}
 }
 
-ATBPProjectile* TBPBuffSystem::SpawnProjectile(UWorld* World, ATBPBaseWeapon* Weapon, const UDataTable* BuffDataTable, ETBPBuffType ProjectileBuffType,
+ATBPProjectile* UTBPBuffSystem::SpawnProjectile(UWorld* World, ATBPBaseWeapon* Weapon, ETBPBuffType ProjectileBuffType,
 	const FVector& Location, const FVector& Direction)
 {
 	//TODO: Add DataTable to condition
 	//TODO: Get data from DataTable
-	if (!World || !Weapon || !BuffDataTable)
+	if (!World || !Weapon)
 	{
 		return nullptr;
 	}
@@ -58,7 +60,7 @@ ATBPProjectile* TBPBuffSystem::SpawnProjectile(UWorld* World, ATBPBaseWeapon* We
 		Projectile->SetShotDirection(Direction);
 		Projectile->SetOwner(Weapon);
 		
-		SetProjectileParameters(Projectile, BuffDataTable, ProjectileBuffType);
+		SetProjectileParameters(Projectile, ProjectileBuffType);
 		
 		Projectile->FinishSpawning(SpawnTransform);
 	}
@@ -66,60 +68,29 @@ ATBPProjectile* TBPBuffSystem::SpawnProjectile(UWorld* World, ATBPBaseWeapon* We
 	return Projectile;
 }
 
-void TBPBuffSystem::SetProjectileParameters(ATBPProjectile* Projectile, const UDataTable* BuffDataTable, ETBPBuffType ProjectileBuffType)
+void UTBPBuffSystem::SetProjectileParameters(ATBPProjectile* Projectile, ETBPBuffType ProjectileBuffType)
 {
 	//TODO: cache values? Replace TEXT to something from reflection
 	//TODO: make Maps with this key inside GameMode or some inherited class
-	TArray<FTBPBuffSettings*> BuffSettingsArray;
-	BuffDataTable->GetAllRows<FTBPBuffSettings>(TEXT("BuffSettings"), BuffSettingsArray);
+	TArray<FTBPBuffSettings*> BuffSettingsRows;
+	BuffSettings->GetAllRows<FTBPBuffSettings>(TEXT("BuffSettings"), BuffSettingsRows);
 
-	FTBPBuffSettings* BuffSettings = nullptr;
-	for (FTBPBuffSettings* CurrBuffSettings : BuffSettingsArray)
+	FTBPBuffSettings* BuffSettingsRow = nullptr;
+	for (FTBPBuffSettings* CurrBuffSettingsRow : BuffSettingsRows)
 	{
-		if(CurrBuffSettings->BuffType == ProjectileBuffType)
+		if(CurrBuffSettingsRow->BuffType == ProjectileBuffType)
 		{
-			BuffSettings = CurrBuffSettings;
+			BuffSettingsRow = CurrBuffSettingsRow;
 		}
 	}
 
-	if(!BuffSettings)
+	if(!BuffSettingsRow || ProjectileBuffType == ETBPBuffType::Other || BuffSettingsRow->BuffClass == nullptr)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Can't create buf for this Projectile. Check DataTable for Buffs"));
 		Projectile->Buff = nullptr;
 		return;
 	}
-
-	//TODO: Make factory class where this function will be implemented for each type
-	switch (ProjectileBuffType)
-	{
-	case ETBPBuffType::InstantDamage:
-	{
-		UTBPDamageBuff* DamageBuff = NewObject<UTBPDamageBuff>();
-		DamageBuff->Damage = BuffSettings->Value;
-		Projectile->Buff = DamageBuff;
-		break;
-	}		
-	case ETBPBuffType::DamageOverTime:
-	{
-		UTBPDamageOverTimeBuff* DamageOverTimeBuff = NewObject<UTBPDamageOverTimeBuff>();
-		DamageOverTimeBuff->Duration = BuffSettings->Duration;
-		DamageOverTimeBuff->TickDeltaTime = BuffSettings->TickDeltaTime;
-		DamageOverTimeBuff->Damage = BuffSettings->Value;
-		Projectile->Buff = DamageOverTimeBuff;
-		break;
-	}		
-	case ETBPBuffType::MovementSpeedModifier:
-	{
-		UTBPMovementSpeedModifierBuff* MovementSpeedModifierBuff = NewObject<UTBPMovementSpeedModifierBuff>();
-		MovementSpeedModifierBuff->Duration = BuffSettings->Duration;
-		MovementSpeedModifierBuff->TickDeltaTime = BuffSettings->TickDeltaTime;
-		MovementSpeedModifierBuff->SpeedModifier = BuffSettings->Value;
-		Projectile->Buff = MovementSpeedModifierBuff;
-		break;
-	}		
-	case ETBPBuffType::Other:
-		UE_LOG(LogTemp, Warning, TEXT("Can't create buf for this Projectile."));
-		Projectile->Buff = nullptr;
-		break;
-	}
+	
+	Projectile->Buff = NewObject<UTBPBaseBuff>(GetTransientPackage(), BuffSettingsRow->BuffClass);
+	Projectile->Buff->SetParameters(*BuffSettingsRow);
 }

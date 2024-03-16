@@ -23,7 +23,7 @@ public:
 protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
-	ETBPBuffType ProjectileBuff;
+	ETBPBuffType ProjectileBuffType;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	USkeletalMeshComponent* WeaponMesh;

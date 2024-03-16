@@ -10,6 +10,13 @@ UTBPDamageBuff::UTBPDamageBuff()
 	BuffType = ETBPBuffType::InstantDamage;
 }
 
+void UTBPDamageBuff::SetParameters(const FTBPBuffSettings& BuffSettings)
+{
+	Super::SetParameters(BuffSettings);	
+	
+	Damage = BuffSettings.Value;
+}
+
 void UTBPDamageBuff::Activate(ATBPBaseCharacter* Target) const
 {
 	Super::Activate(Target);

@@ -16,8 +16,9 @@ public:
 	virtual void Activate(ATBPBaseCharacter* Target) const override;
 	virtual void OnEndBuff(ATBPBaseCharacter* Target) const override;
 	
-	//TODO: make property protected. change the way of initialization
-//protected:
+	virtual void SetParameters(const FTBPBuffSettings& BuffSettings) override;
+	
+protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement", meta = (ClampMin = "0.0", ClampMax = "2.0"))
 	float SpeedModifier = 0.2f;
 };

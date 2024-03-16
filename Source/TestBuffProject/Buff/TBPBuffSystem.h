@@ -30,7 +30,7 @@ struct FTBPBuffSettings : public FTableRowBase
 	ETBPBuffType BuffType;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-	bool bIsInstant = true;
+	TSubclassOf<UTBPBaseBuff> BuffClass;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	float Duration = 3.0f;
@@ -42,16 +42,27 @@ struct FTBPBuffSettings : public FTableRowBase
 	float Value = 0.0f;
 };
 
-namespace TBPBuffSystem
+UCLASS(Blueprintable, BlueprintType)
+class TESTBUFFPROJECT_API UTBPBuffSystem : public UObject
 {
-	void ApplyBuffInRadius(UWorld* World, const UTBPBaseBuff* Buff, const FVector& Location, float Radius);
+    GENERATED_BODY()
+	
+public:
+
+	void OnStartPlay();
+	
+	static void ApplyBuffInRadius(UWorld* World, const UTBPBaseBuff* Buff, const FVector& Location, float Radius);
 
 	//TODO: Move to some class
 	//TODO: Maybe it will be some manager inside GameState or GameMode or GameInstance or somewhere there
 	//TODO: so we will have a link for DataTable
 	//TODO: Maybe move there whole TBPBuffSystem namespace and make it class
-	ATBPProjectile* SpawnProjectile(UWorld* World, ATBPBaseWeapon* Weapon, const UDataTable* BuffDataTable, ETBPBuffType ProjectileBuffType,
+	ATBPProjectile* SpawnProjectile(UWorld* World, ATBPBaseWeapon* Weapon, ETBPBuffType ProjectileBuffType,
 		const FVector& Location, const FVector& Direction);
 
-	void SetProjectileParameters(ATBPProjectile* Projectile, const UDataTable* BuffDataTable, ETBPBuffType ProjectileBuffType);
-}
+	void SetProjectileParameters(ATBPProjectile* Projectile, ETBPBuffType ProjectileBuffType);
+
+protected:
+	UPROPERTY(EditDefaultsOnly, Category = "Buff")
+	UDataTable* BuffSettings = nullptr;
+};

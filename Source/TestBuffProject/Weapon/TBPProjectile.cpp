@@ -2,10 +2,12 @@
 
 #include "TBPProjectile.h"
 
+#include "TBPBaseGameMode.h"
 #include "Buff/TBPBuffSystem.h"
 #include "Buff/TBPMovementSpeedModifierBuff.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "Player/TBPBaseCharacter.h"
 
 ATBPProjectile::ATBPProjectile()
@@ -48,7 +50,14 @@ void ATBPProjectile::OnProjectileHit(UPrimitiveComponent* PrimitiveComponent, AA
 
 	MovementComponent->StopMovementImmediately();
 
-	TBPBuffSystem::ApplyBuffInRadius(World, Buff, HitResult.ImpactPoint, Radius);
+	const ATBPBaseGameMode* GameMode = Cast<ATBPBaseGameMode>(UGameplayStatics::GetGameMode(this));
+	check(GameMode);
+	check(GameMode->BuffSystem);
+	
+	if(Buff && GameMode)
+	{
+		GameMode->BuffSystem->ApplyBuffInRadius(World, Buff, HitResult.ImpactPoint, Radius);
+	}
 
 	Destroy();
 }

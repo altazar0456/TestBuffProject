@@ -49,9 +49,10 @@ void ATBPBaseWeapon::MakeShot()
 	{		
 		const ATBPBaseGameMode* GameMode = Cast<ATBPBaseGameMode>(UGameplayStatics::GetGameMode(this));
 		check(GameMode);
+		
 		const FVector Direction = (TraceEnd - TraceStart).GetSafeNormal();
 		
-		TBPBuffSystem::SpawnProjectile(GetWorld(), this, GameMode->BuffSettings, ProjectileBuff, TraceStart, Direction);
+		GameMode->BuffSystem->SpawnProjectile(GetWorld(), this, ProjectileBuffType, TraceStart, Direction);
 		
 		DrawDebugLine(GetWorld(), TraceStart, TraceEnd, FColor::Orange, false, 3.0f, 0, 3.0f);
 	}

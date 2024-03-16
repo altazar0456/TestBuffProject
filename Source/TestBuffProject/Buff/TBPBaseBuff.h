@@ -28,6 +28,8 @@ public:
 	virtual float GetDuration() const { return 0.0f; }
 	virtual float GetTickPeriod() const { return 0.1f; }
 	
+	virtual void SetParameters(const FTBPBuffSettings& BuffSettings) {}
+	
 protected:	
 	// TODO: implement instanced behaviour if we need it
 	// In case buff need to store runtime data in properties need to set it true  
@@ -45,9 +47,10 @@ public:
 	virtual bool IsInstant() const override { return false; }
 	virtual float GetDuration() const override { return Duration; }
 	virtual float GetTickPeriod() const override { return TickDeltaTime; }
+
+	virtual void SetParameters(const FTBPBuffSettings& BuffSettings) override;
 	
-	//TODO: make properties protected. change the way of initialization
-//protected:
+protected:
 	UPROPERTY(VisibleAnywhere, Category = "Buff", meta = (ClampMin = "0.0001", ClampMax = "1000.0"))
 	float Duration = 3.0f;
 	

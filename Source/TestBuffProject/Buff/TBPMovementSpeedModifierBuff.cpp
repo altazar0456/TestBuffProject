@@ -9,6 +9,13 @@ UTBPMovementSpeedModifierBuff::UTBPMovementSpeedModifierBuff()
 	BuffType = ETBPBuffType::MovementSpeedModifier;
 }
 
+void UTBPMovementSpeedModifierBuff::SetParameters(const FTBPBuffSettings& BuffSettings)
+{
+	Super::SetParameters(BuffSettings);	
+	
+	SpeedModifier = BuffSettings.Value;
+}
+
 void UTBPMovementSpeedModifierBuff::Activate(ATBPBaseCharacter* Target) const
 {
 	//TODO: rewrite it
