@@ -42,9 +42,14 @@ void ATBPPlayerCharacter::SetupPlayerInputComponent(class UInputComponent* Playe
 	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
 	PlayerInputComponent->BindAxis("TurnRate", this, &ATBPPlayerCharacter::TurnAtRate);
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
-	PlayerInputComponent->BindAxis("LookUpRate", this, &ATBPPlayerCharacter::LookUpAtRate);
+	PlayerInputComponent->BindAxis("LookUpRate", this, &ATBPPlayerCharacter::LookUpAtRate);	
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &ATBPPlayerCharacter::StartFire);
 	PlayerInputComponent->BindAction("Fire", IE_Released, WeaponComponent, &UTBPWeaponComponent::StopFire);
+	
+	DECLARE_DELEGATE_OneParam(FEquipWeaponSignature, int32);
+	PlayerInputComponent->BindAction<FEquipWeaponSignature>("EquipWeapon1", IE_Pressed, WeaponComponent, &UTBPWeaponComponent::EquipWeapon, 0);
+	PlayerInputComponent->BindAction<FEquipWeaponSignature>("EquipWeapon2", IE_Pressed, WeaponComponent, &UTBPWeaponComponent::EquipWeapon, 1);
+	PlayerInputComponent->BindAction<FEquipWeaponSignature>("EquipWeapon3", IE_Pressed, WeaponComponent, &UTBPWeaponComponent::EquipWeapon, 2);
 }
 
 void ATBPPlayerCharacter::TurnAtRate(float Rate)

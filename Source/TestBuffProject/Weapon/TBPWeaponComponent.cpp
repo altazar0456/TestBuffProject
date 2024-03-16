@@ -12,11 +12,16 @@ void UTBPWeaponComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	SpawnWeapon();	
+	CurrentWeaponIndex = 0;
+	SpawnWeapons();
+    EquipWeapon(CurrentWeaponIndex);
 }
 
-void UTBPWeaponComponent::SpawnWeapon()
+void UTBPWeaponComponent::SpawnWeapons()
 {
+	static const FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, false);		
+	static const FName WeaponSocketName = FName(TEXT("WeaponSocket"));
+	
 	UWorld* World = GetWorld();
 	if (!World)
 	{
@@ -27,19 +32,45 @@ void UTBPWeaponComponent::SpawnWeapon()
 	if(!Character)
 	{
 		return;
-	}
-
-	CurrentWeapon = World->SpawnActor<ATBPBaseWeapon>(WeaponClass);
-	if(!CurrentWeapon)
+	}	
+	
+	for (TSubclassOf<ATBPBaseWeapon> WeaponClass : WeaponClasses)
 	{
+		ATBPBaseWeapon* Weapon = GetWorld()->SpawnActor<ATBPBaseWeapon>(WeaponClass);
+		if (!Weapon) continue;
+
+		Weapon->SetOwner(Character);
+		Weapon->AttachToComponent(Character->GetMesh(), AttachmentRules, WeaponSocketName);
+		Weapon->SetActorHiddenInGame(true);
+		Weapon->SetOwner(GetOwner());
+		
+		Weapons.Add(Weapon);
+	}
+}
+
+void UTBPWeaponComponent::EquipWeapon(int32 WeaponIndex)
+{
+	if (WeaponIndex < 0 || WeaponIndex >= Weapons.Num())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Invalid weapon index"));
 		return;
 	}
 	
-	const FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, false);		
-	const FName WeaponSocketName = FName(TEXT("WeaponSocket"));
+	ACharacter* Character = Cast<ACharacter>(GetOwner());
+	if (!Character)
+	{
+		return;
+	}
+
+	if (CurrentWeapon)
+	{
+		CurrentWeapon->StopFire();
+		CurrentWeapon->SetActorHiddenInGame(true);
+	}
 	
-	CurrentWeapon->AttachToComponent(Character->GetMesh(), AttachmentRules, WeaponSocketName);
-	CurrentWeapon->SetOwner(GetOwner());
+	
+	CurrentWeapon = Weapons[WeaponIndex];
+	CurrentWeapon->SetActorHiddenInGame(false);
 }
 
 void UTBPWeaponComponent::StartFire()

@@ -14,20 +14,27 @@ class TESTBUFFPROJECT_API UTBPWeaponComponent : public UActorComponent
 	GENERATED_BODY()
 
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
-	TSubclassOf<ATBPBaseWeapon> WeaponClass;
+	TArray<TSubclassOf<ATBPBaseWeapon>> WeaponClasses;
 	
 public:	
 	UTBPWeaponComponent();
 
 	void StartFire();
 	void StopFire();
+	
+	void EquipWeapon(int32 WeaponIndex);
 
 protected:
 	virtual void BeginPlay() override;
 
-	void SpawnWeapon();
+	void SpawnWeapons();
 
 private:
 	UPROPERTY()
-	ATBPBaseWeapon* CurrentWeapon = nullptr;	
+	ATBPBaseWeapon* CurrentWeapon = nullptr;
+	
+	UPROPERTY()
+	TArray<ATBPBaseWeapon*> Weapons;
+	
+	int32 CurrentWeaponIndex = 0;
 };
