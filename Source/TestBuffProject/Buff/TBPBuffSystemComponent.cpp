@@ -26,7 +26,7 @@ void UTBPBuffSystemComponent::OnComponentDestroyed(bool bDestroyingHierarchy)
 
 			if (BuffData.Buff)
 			{
-				BuffData.Buff->OnEndBuff(CharacterOwner);
+				BuffData.Buff->OnEndBuff(CharacterOwner, true);
 			}
 		}
 	}
@@ -34,23 +34,22 @@ void UTBPBuffSystemComponent::OnComponentDestroyed(bool bDestroyingHierarchy)
 	Super::OnComponentDestroyed(bDestroyingHierarchy);
 }
 
-void UTBPBuffSystemComponent::ApplyBuff(const UTBPBaseBuff* Buff)
+void UTBPBuffSystemComponent::ApplyBuff(UTBPBaseBuff* Buff)
 {
 	UWorld* World = GetWorld();
 	if(!World)
 	{
 		return;
 	}
-	//TODO: Implement instanced behaviour where each Buff can have their own runtime memory
 	
 	// Can be only one Buff at the same type
-	EndBuff(Buff->BuffType);
+	EndBuff(Buff->BuffType, true);
 
 	Buff->Activate(CharacterOwner);
 
 	if(Buff->IsInstant())
 	{
-		Buff->OnEndBuff(CharacterOwner);
+		Buff->OnEndBuff(CharacterOwner, false);
 		return;
 	}
 
@@ -63,7 +62,7 @@ void UTBPBuffSystemComponent::ApplyBuff(const UTBPBaseBuff* Buff)
 	
 	FTimerDelegate TickDelegate = FTimerDelegate::CreateUObject( this, &UTBPBuffSystemComponent::TickBuff, Buff, BuffDeltaTime);	
 	World->GetTimerManager().SetTimer(BuffData.TickHandle, TickDelegate, BuffDeltaTime, true);
-	FTimerDelegate EndDelegate = FTimerDelegate::CreateUObject(this, &UTBPBuffSystemComponent::EndBuff, Buff->BuffType);	
+	FTimerDelegate EndDelegate = FTimerDelegate::CreateUObject(this, &UTBPBuffSystemComponent::EndBuff, Buff->BuffType, false);	
 	World->GetTimerManager().SetTimer(BuffData.EndHandle, EndDelegate, BuffDuration, false);
 	
 	AppliedBuffs.Add(Buff->BuffType, BuffData);
@@ -71,12 +70,12 @@ void UTBPBuffSystemComponent::ApplyBuff(const UTBPBaseBuff* Buff)
 	OnBuffChanged.Broadcast(GetBuffStatusText());
 }
 
-void UTBPBuffSystemComponent::TickBuff(const UTBPBaseBuff* Buff, float DeltaTime)
+void UTBPBuffSystemComponent::TickBuff(UTBPBaseBuff* Buff, float DeltaTime)
 {	
 	Buff->TickBuff(CharacterOwner, DeltaTime);
 }
 
-void UTBPBuffSystemComponent::EndBuff(ETBPBuffType BuffType)
+void UTBPBuffSystemComponent::EndBuff(ETBPBuffType BuffType, bool bIsInterrupted)
 {
 	UWorld* World = GetWorld();
 	if(!World)
@@ -92,7 +91,7 @@ void UTBPBuffSystemComponent::EndBuff(ETBPBuffType BuffType)
 
 		if (BuffData->Buff)
 		{
-			BuffData->Buff->OnEndBuff(CharacterOwner);
+			BuffData->Buff->OnEndBuff(CharacterOwner, bIsInterrupted);
 		}
 		
 		AppliedBuffs.Remove(BuffType);
@@ -114,7 +113,7 @@ FText UTBPBuffSystemComponent::GetBuffStatusText()
 	{
 		const FBuffData& BuffData = BuffDataPair.Value;
 
-		BuffStatus += BuffData.Buff->GetClass()->GetName() + "|";
+		BuffStatus += BuffData.Buff->GetName() + "|";
 	}
 	
 	return FText::FromString(BuffStatus);

@@ -9,7 +9,6 @@
 
 class ATBPBaseCharacter;
 
-//TODO: Implement instanced behaviour where each Buff can have their own runtime memory if we need it
 //TODO: forbid to use this class for designers
 UCLASS()
 class TESTBUFFPROJECT_API UTBPBaseBuff : public UObject
@@ -18,10 +17,12 @@ class TESTBUFFPROJECT_API UTBPBaseBuff : public UObject
 	
 public:
 	ETBPBuffType BuffType = ETBPBuffType::Other;
+
+	bool IsInstanced() { return bInstanced; }
 	
-	virtual void Activate(ATBPBaseCharacter* Target) const {}
-	virtual void TickBuff(ATBPBaseCharacter* Target, float DeltaTime) const {}
-	virtual void OnEndBuff(ATBPBaseCharacter* Target) const {}
+	virtual void Activate(ATBPBaseCharacter* Target) {}
+	virtual void TickBuff(ATBPBaseCharacter* Target, float DeltaTime) {}
+	virtual void OnEndBuff(ATBPBaseCharacter* Target, bool bIsInterrupted) {}
 	
 	// Is it instant Buff or does it need time to execute
 	virtual bool IsInstant() const { return true; }
@@ -31,10 +32,9 @@ public:
 	virtual void SetParameters(const FTBPBuffSettings& BuffSettings) {}
 	
 protected:	
-	// TODO: implement instanced behaviour if we need it
 	// In case buff need to store runtime data in properties need to set it true  
-	// UPROPERTY(VisibleAnywhere, Category = "Advanced")
-	// bool bInstanced = false;
+	UPROPERTY(VisibleAnywhere, Category = "Advanced")
+	bool bInstanced = false;
 };
 
 //TODO: forbid to use this class for designers

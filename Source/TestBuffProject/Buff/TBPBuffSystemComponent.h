@@ -19,7 +19,7 @@ struct FBuffData
 	
 public:
 	UPROPERTY(Transient)
-	const UTBPBaseBuff* Buff = nullptr;
+	UTBPBaseBuff* Buff = nullptr;
 	
     FTimerHandle TickHandle;
     FTimerHandle EndHandle;
@@ -38,7 +38,7 @@ public:
 	virtual void OnComponentDestroyed(bool bDestroyingHierarchy) override;
 
     FText GetBuffStatusText();
-	void ApplyBuff(const UTBPBaseBuff* Buff);
+	void ApplyBuff(UTBPBaseBuff* Buff);
 
 protected:
 	
@@ -49,6 +49,6 @@ protected:
 	UPROPERTY(Transient)
 	TMap<ETBPBuffType, FBuffData> AppliedBuffs;
 
-	void TickBuff(const UTBPBaseBuff* Buff, float DeltaTime);
-	void EndBuff(ETBPBuffType BuffType);
+	void TickBuff(UTBPBaseBuff* Buff, float DeltaTime);
+	void EndBuff(ETBPBuffType BuffType, bool bIsInterrupted);
 };

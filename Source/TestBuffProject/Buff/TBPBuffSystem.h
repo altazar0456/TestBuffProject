@@ -51,16 +51,16 @@ public:
 
 	void OnStartPlay();
 	
-	static void ApplyBuffInRadius(UWorld* World, const UTBPBaseBuff* Buff, const FVector& Location, float Radius);
+	void ApplyBuffInRadius(UWorld* World, UTBPBaseBuff* Buff, const FVector& Location, float Radius) const;
 
 	//TODO: Move to some class
 	//TODO: Maybe it will be some manager inside GameState or GameMode or GameInstance or somewhere there
 	//TODO: so we will have a link for DataTable
 	//TODO: Maybe move there whole TBPBuffSystem namespace and make it class
 	ATBPProjectile* SpawnProjectile(UWorld* World, ATBPBaseWeapon* Weapon, ETBPBuffType ProjectileBuffType,
-		const FVector& Location, const FVector& Direction);
+		const FVector& Location, const FVector& Direction) const;
 
-	void SetProjectileParameters(ATBPProjectile* Projectile, ETBPBuffType ProjectileBuffType);
+	void SetProjectileParameters(ATBPProjectile* Projectile, ETBPBuffType ProjectileBuffType) const;
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Buff")

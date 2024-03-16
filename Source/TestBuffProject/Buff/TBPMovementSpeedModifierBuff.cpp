@@ -16,7 +16,7 @@ void UTBPMovementSpeedModifierBuff::SetParameters(const FTBPBuffSettings& BuffSe
 	SpeedModifier = BuffSettings.Value;
 }
 
-void UTBPMovementSpeedModifierBuff::Activate(ATBPBaseCharacter* Target) const
+void UTBPMovementSpeedModifierBuff::Activate(ATBPBaseCharacter* Target)
 {
 	//TODO: rewrite it
 	UTBPCharacterMovementComponent* MovementComponent = Cast<UTBPCharacterMovementComponent>(Target->GetMovementComponent());
@@ -26,7 +26,7 @@ void UTBPMovementSpeedModifierBuff::Activate(ATBPBaseCharacter* Target) const
 	}	
 }
 
-void UTBPMovementSpeedModifierBuff::OnEndBuff(ATBPBaseCharacter* Target) const
+void UTBPMovementSpeedModifierBuff::OnEndBuff(ATBPBaseCharacter* Target, bool bIsInterrupted)
 {
 	//TODO: rewrite it
 	UTBPCharacterMovementComponent* MovementComponent = Cast<UTBPCharacterMovementComponent>(Target->GetMovementComponent());

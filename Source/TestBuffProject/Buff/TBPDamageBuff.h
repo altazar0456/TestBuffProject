@@ -12,7 +12,7 @@ class TESTBUFFPROJECT_API UTBPDamageBuff : public UTBPBaseBuff
 	GENERATED_BODY()
 public:
 	UTBPDamageBuff();
-	virtual void Activate(ATBPBaseCharacter* Target) const override;
+	virtual void Activate(ATBPBaseCharacter* Target) override;
 
 	virtual void SetParameters(const FTBPBuffSettings& BuffSettings) override;
 	

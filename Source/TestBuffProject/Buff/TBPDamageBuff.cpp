@@ -17,7 +17,7 @@ void UTBPDamageBuff::SetParameters(const FTBPBuffSettings& BuffSettings)
 	Damage = BuffSettings.Value;
 }
 
-void UTBPDamageBuff::Activate(ATBPBaseCharacter* Target) const
+void UTBPDamageBuff::Activate(ATBPBaseCharacter* Target)
 {
 	Super::Activate(Target);
 	

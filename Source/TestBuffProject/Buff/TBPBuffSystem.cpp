@@ -12,7 +12,7 @@ void UTBPBuffSystem::OnStartPlay()
 	check(BuffSettings);
 }
 
-void UTBPBuffSystem::ApplyBuffInRadius(UWorld* World, const UTBPBaseBuff* Buff, const FVector& Location, float Radius)
+void UTBPBuffSystem::ApplyBuffInRadius(UWorld* World, UTBPBaseBuff* Buff, const FVector& Location, float Radius) const
 {
 	if (!World || Radius <= 0)
 	{
@@ -33,17 +33,23 @@ void UTBPBuffSystem::ApplyBuffInRadius(UWorld* World, const UTBPBaseBuff* Buff, 
 			const AActor* Actor = OverlapResult.GetActor();
 			UTBPBuffSystemComponent* BuffSystemComponent = Actor ? Cast<UTBPBuffSystemComponent>(Actor->GetComponentByClass(UTBPBuffSystemComponent::StaticClass())) : nullptr;
 
+			UTBPBaseBuff* CurrentBuff = Buff;
+			if(Buff->IsInstanced())
+			{
+				CurrentBuff = DuplicateObject(Buff, GetTransientPackage());
+			}
+			
 			if(BuffSystemComponent)
 			{
 				//TODO: check that it's okay to paste one buff everywhere
-				BuffSystemComponent->ApplyBuff(Buff);				
+				BuffSystemComponent->ApplyBuff(CurrentBuff);				
 			}
 		}
 	}
 }
 
 ATBPProjectile* UTBPBuffSystem::SpawnProjectile(UWorld* World, ATBPBaseWeapon* Weapon, ETBPBuffType ProjectileBuffType,
-	const FVector& Location, const FVector& Direction)
+	const FVector& Location, const FVector& Direction) const
 {
 	//TODO: Add DataTable to condition
 	//TODO: Get data from DataTable
@@ -68,7 +74,7 @@ ATBPProjectile* UTBPBuffSystem::SpawnProjectile(UWorld* World, ATBPBaseWeapon* W
 	return Projectile;
 }
 
-void UTBPBuffSystem::SetProjectileParameters(ATBPProjectile* Projectile, ETBPBuffType ProjectileBuffType)
+void UTBPBuffSystem::SetProjectileParameters(ATBPProjectile* Projectile, ETBPBuffType ProjectileBuffType) const
 {
 	//TODO: cache values? Replace TEXT to something from reflection
 	//TODO: make Maps with this key inside GameMode or some inherited class

@@ -13,8 +13,8 @@ class TESTBUFFPROJECT_API UTBPMovementSpeedModifierBuff : public UTBPLastingBuff
 public:
 	UTBPMovementSpeedModifierBuff();
 	
-	virtual void Activate(ATBPBaseCharacter* Target) const override;
-	virtual void OnEndBuff(ATBPBaseCharacter* Target) const override;
+	virtual void Activate(ATBPBaseCharacter* Target) override;
+	virtual void OnEndBuff(ATBPBaseCharacter* Target, bool bIsInterrupted) override;
 	
 	virtual void SetParameters(const FTBPBuffSettings& BuffSettings) override;
 	
