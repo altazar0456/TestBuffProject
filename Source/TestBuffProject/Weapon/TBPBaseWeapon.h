@@ -3,8 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Buff/TBPBuffSystem.h"
 #include "TBPBaseWeapon.generated.h"
 
+class ATBPProjectile;
 class USkeletalMeshComponent;
 
 UCLASS()
@@ -19,6 +21,10 @@ public:
 	bool IsFiring() const;
 	
 protected:
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
+	ETBPBuffType ProjectileBuff;
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	USkeletalMeshComponent* WeaponMesh;
 	
@@ -34,6 +40,5 @@ protected:
 	
 	virtual void MakeShot();
 
-	//TODO: remove bIsCollided
 	bool GetProjectileTraceData(FVector& TraceStart, FVector& TraceEnd) const;
 };

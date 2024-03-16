@@ -22,8 +22,6 @@ ATBPProjectile::ATBPProjectile()
 	MovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>("MovementComponent");
 	MovementComponent->InitialSpeed = 2000.0f;
 	MovementComponent->ProjectileGravityScale = 0.0f;
-
-	Buff = CreateDefaultSubobject<UTBPMovementSpeedModifierBuff>("Buff");
 }
 
 void ATBPProjectile::BeginPlay()

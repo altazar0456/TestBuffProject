@@ -9,7 +9,7 @@
 #include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Movement/TBPCharacterMovementComponent.h"
-#include "UI/TBPHealthBarWidget.h"
+#include "UI/TBPHealthBarBuffWidget.h"
 
 ATBPBaseCharacter::ATBPBaseCharacter(const FObjectInitializer& ObjInit)
 : Super(ObjInit.SetDefaultSubobjectClass<UTBPCharacterMovementComponent>(ACharacter::CharacterMovementComponentName))
@@ -32,10 +32,10 @@ ATBPBaseCharacter::ATBPBaseCharacter(const FObjectInitializer& ObjInit)
 	WeaponComponent = CreateDefaultSubobject<UTBPWeaponComponent>("WeaponComponent");
 	BuffSystemComponent = CreateDefaultSubobject<UTBPBuffSystemComponent>("BuffSystemComponent");
 	
-	HealthWidgetComponent = CreateDefaultSubobject<UWidgetComponent>("HealthWidgetComponent");
-	HealthWidgetComponent->SetupAttachment(GetRootComponent());
-	HealthWidgetComponent->SetWidgetSpace(EWidgetSpace::Screen);
-	HealthWidgetComponent->SetDrawAtDesiredSize(true);
+	HealthBuffWidgetComponent = CreateDefaultSubobject<UWidgetComponent>("HealthBuffWidgetComponent");
+	HealthBuffWidgetComponent->SetupAttachment(GetRootComponent());
+	HealthBuffWidgetComponent->SetWidgetSpace(EWidgetSpace::Screen);
+	HealthBuffWidgetComponent->SetDrawAtDesiredSize(true);
 }
 
 void ATBPBaseCharacter::BeginPlay()
@@ -45,7 +45,7 @@ void ATBPBaseCharacter::BeginPlay()
 	check(HealthComponent);
 	check(WeaponComponent);
 	check(BuffSystemComponent);
-    check(HealthWidgetComponent);
+    check(HealthBuffWidgetComponent);
 	check(GetCharacterMovement());
 	check(GetCapsuleComponent());
 	check(GetMesh());
@@ -53,6 +53,9 @@ void ATBPBaseCharacter::BeginPlay()
 	OnHealthChanged(HealthComponent->GetHealth());
 	HealthComponent->OnDeath.AddUObject(this, &ATBPBaseCharacter::OnDeath);
 	HealthComponent->OnHealthChanged.AddUObject(this, &ATBPBaseCharacter::OnHealthChanged);
+	
+	OnBuffChanged(BuffSystemComponent->GetBuffStatusText());
+	BuffSystemComponent->OnBuffChanged.AddUObject(this, &ATBPBaseCharacter::OnBuffChanged);
 }
 
 void ATBPBaseCharacter::OnDeath()
@@ -61,7 +64,7 @@ void ATBPBaseCharacter::OnDeath()
 	
 	GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 	WeaponComponent->StopFire();
-	HealthWidgetComponent->SetVisibility(false, true);
+	HealthBuffWidgetComponent->SetVisibility(false, true);
 	
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	GetMesh()->SetSimulatePhysics(true);
@@ -69,10 +72,20 @@ void ATBPBaseCharacter::OnDeath()
 
 void ATBPBaseCharacter::OnHealthChanged(float Health)
 {	
-	const auto HealthBarWidget = Cast<UTBPHealthBarWidget>(HealthWidgetComponent->GetUserWidgetObject());
+	const auto HealthBarWidget = Cast<UTBPHealthBarBuffWidget>(HealthBuffWidgetComponent->GetUserWidgetObject());
 	if (!HealthBarWidget)
 	{
 		return;
 	}
 	HealthBarWidget->SetHealthPercent(HealthComponent->GetHealthPercent());
+}
+
+void ATBPBaseCharacter::OnBuffChanged(FText BuffStatus)
+{
+	const auto HealthBarWidget = Cast<UTBPHealthBarBuffWidget>(HealthBuffWidgetComponent->GetUserWidgetObject());
+	if (!HealthBarWidget)
+	{
+		return;
+	}	
+	HealthBarWidget->SetBuffStatus(BuffStatus);
 }

@@ -1,8 +1,13 @@
 ﻿// Test Buff Project. All Rights Reserved.
 
 #include "TBPBaseWeapon.h"
+
+#include "DrawDebugHelpers.h"
+#include "TBPBaseGameMode.h"
+#include "TBPProjectile.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "GameFramework/Character.h"
+#include "Kismet/GameplayStatics.h"
 
 ATBPBaseWeapon::ATBPBaseWeapon()
 {
@@ -34,7 +39,23 @@ bool ATBPBaseWeapon::IsFiring() const
 	return bFireInProgress;
 }
 
-void ATBPBaseWeapon::MakeShot() {}
+void ATBPBaseWeapon::MakeShot()
+{
+	UE_LOG(LogTemp, Log, TEXT("Shot projectile from Launcher weapon"));
+	
+	FVector TraceStart;
+	FVector TraceEnd;
+	if(GetProjectileTraceData(TraceStart, TraceEnd))
+	{		
+		const ATBPBaseGameMode* GameMode = Cast<ATBPBaseGameMode>(UGameplayStatics::GetGameMode(this));
+		check(GameMode);
+		const FVector Direction = (TraceEnd - TraceStart).GetSafeNormal();
+		
+		TBPBuffSystem::SpawnProjectile(GetWorld(), this, GameMode->BuffSettings, ProjectileBuff, TraceStart, Direction);
+		
+		DrawDebugLine(GetWorld(), TraceStart, TraceEnd, FColor::Orange, false, 3.0f, 0, 3.0f);
+	}
+}
 
 bool ATBPBaseWeapon::GetProjectileTraceData(FVector& TraceStart, FVector& TraceEnd) const
 {
@@ -53,7 +74,7 @@ bool ATBPBaseWeapon::GetProjectileTraceData(FVector& TraceStart, FVector& TraceE
 	const FTransform SocketTransform = WeaponMesh->GetSocketTransform(MuzzleSocketName);
 	const FVector TraceStartCamera = ViewLocation;
 	TraceStart = SocketTransform.GetLocation();
-	const FVector ShootDirection = ViewRotation.Vector(); //SocketTransform.GetRotation().GetForwardVector();
+	const FVector ShootDirection = ViewRotation.Vector();
 	const FVector CameraTraceEnd = TraceStartCamera + ShootDirection * TraceMaxDistance;
 	
 	FHitResult HitResult;

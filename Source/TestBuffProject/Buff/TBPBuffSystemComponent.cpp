@@ -5,9 +5,13 @@
 #include "TBPBaseBuff.h"
 #include "Player/TBPBaseCharacter.h"
 
-UTBPBuffSystemComponent::UTBPBuffSystemComponent()
+
+void UTBPBuffSystemComponent::OnRegister()
 {
-	
+	Super::OnRegister();
+
+	CharacterOwner = Cast<ATBPBaseCharacter>(GetOwner());
+	check(CharacterOwner);
 }
 
 void UTBPBuffSystemComponent::OnComponentDestroyed(bool bDestroyingHierarchy)
@@ -22,9 +26,7 @@ void UTBPBuffSystemComponent::OnComponentDestroyed(bool bDestroyingHierarchy)
 
 			if (BuffData.Buff)
 			{
-				//TODO: Keep Owner in class properties 
-				ATBPBaseCharacter* Character = Cast<ATBPBaseCharacter>(GetOwner());
-				BuffData.Buff->OnEndBuff(Character);
+				BuffData.Buff->OnEndBuff(CharacterOwner);
 			}
 		}
 	}
@@ -32,7 +34,7 @@ void UTBPBuffSystemComponent::OnComponentDestroyed(bool bDestroyingHierarchy)
 	Super::OnComponentDestroyed(bDestroyingHierarchy);
 }
 
-void UTBPBuffSystemComponent::ApplyBuff(UTBPBaseBuff* Buff)
+void UTBPBuffSystemComponent::ApplyBuff(const UTBPBaseBuff* Buff)
 {
 	UWorld* World = GetWorld();
 	if(!World)
@@ -42,16 +44,13 @@ void UTBPBuffSystemComponent::ApplyBuff(UTBPBaseBuff* Buff)
 	//TODO: Implement instanced behaviour where each Buff can have their own runtime memory
 	
 	// Can be only one Buff at the same type
-	EndBuff(Buff->GetClass());
-	
-	//TODO: Keep Owner in class properties 
-	ATBPBaseCharacter* Character = Cast<ATBPBaseCharacter>(GetOwner());
+	EndBuff(Buff->BuffType);
 
-	Buff->Activate(Character);
+	Buff->Activate(CharacterOwner);
 
 	if(Buff->IsInstant())
 	{
-		Buff->OnEndBuff(Character);
+		Buff->OnEndBuff(CharacterOwner);
 		return;
 	}
 
@@ -64,21 +63,20 @@ void UTBPBuffSystemComponent::ApplyBuff(UTBPBaseBuff* Buff)
 	
 	FTimerDelegate TickDelegate = FTimerDelegate::CreateUObject( this, &UTBPBuffSystemComponent::TickBuff, Buff, BuffDeltaTime);	
 	World->GetTimerManager().SetTimer(BuffData.TickHandle, TickDelegate, BuffDeltaTime, true);
-	FTimerDelegate EndDelegate = FTimerDelegate::CreateUObject(this, &UTBPBuffSystemComponent::EndBuff, Buff->GetClass());	
+	FTimerDelegate EndDelegate = FTimerDelegate::CreateUObject(this, &UTBPBuffSystemComponent::EndBuff, Buff->BuffType);	
 	World->GetTimerManager().SetTimer(BuffData.EndHandle, EndDelegate, BuffDuration, false);
 	
-	AppliedBuffs.Add(Buff->GetClass(), BuffData);
+	AppliedBuffs.Add(Buff->BuffType, BuffData);
+
+	OnBuffChanged.Broadcast(GetBuffStatusText());
 }
 
-void UTBPBuffSystemComponent::TickBuff(UTBPBaseBuff* Buff, float DeltaTime)
-{
-	//TODO: Keep Owner in class properties 
-	ATBPBaseCharacter* Character = Cast<ATBPBaseCharacter>(GetOwner());
-	
-	Buff->TickBuff(Character, DeltaTime);
+void UTBPBuffSystemComponent::TickBuff(const UTBPBaseBuff* Buff, float DeltaTime)
+{	
+	Buff->TickBuff(CharacterOwner, DeltaTime);
 }
 
-void UTBPBuffSystemComponent::EndBuff(UClass* BuffClass)
+void UTBPBuffSystemComponent::EndBuff(ETBPBuffType BuffType)
 {
 	UWorld* World = GetWorld();
 	if(!World)
@@ -86,7 +84,7 @@ void UTBPBuffSystemComponent::EndBuff(UClass* BuffClass)
 		return;
 	}
 	
-	FBuffData* BuffData = AppliedBuffs.Find(BuffClass);
+	FBuffData* BuffData = AppliedBuffs.Find(BuffType);
 	if (BuffData)
 	{
         World->GetTimerManager().ClearTimer(BuffData->TickHandle);
@@ -94,11 +92,30 @@ void UTBPBuffSystemComponent::EndBuff(UClass* BuffClass)
 
 		if (BuffData->Buff)
 		{
-			//TODO: Keep Owner in class properties 
-			ATBPBaseCharacter* Character = Cast<ATBPBaseCharacter>(GetOwner());
-			BuffData->Buff->OnEndBuff(Character);
+			BuffData->Buff->OnEndBuff(CharacterOwner);
 		}
 		
-		AppliedBuffs.Remove(BuffClass);
+		AppliedBuffs.Remove(BuffType);
+		OnBuffChanged.Broadcast(GetBuffStatusText());
 	}	
+}
+
+//TODO: Maybe return const FText&, but then we will need to keep this text somewhere. But looks like FText will not copy all text
+FText UTBPBuffSystemComponent::GetBuffStatusText()
+{
+	if (AppliedBuffs.Num() == 0)
+	{
+		return FText::GetEmpty();
+	}
+	
+	//TODO: Maybe construct FText instead of FString.
+	FString BuffStatus = "|";
+	for (auto BuffDataPair : AppliedBuffs)
+	{
+		const FBuffData& BuffData = BuffDataPair.Value;
+
+		BuffStatus += BuffData.Buff->GetClass()->GetName() + "|";
+	}
+	
+	return FText::FromString(BuffStatus);
 }

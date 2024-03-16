@@ -9,3 +9,10 @@ ATBPBaseGameMode::ATBPBaseGameMode()
 	DefaultPawnClass = ATBPPlayerCharacter::StaticClass();
 	HUDClass = ATBPGameHUD::StaticClass();
 }
+
+void ATBPBaseGameMode::StartPlay()
+{
+	Super::StartPlay();
+
+	check(BuffSettings);	
+}

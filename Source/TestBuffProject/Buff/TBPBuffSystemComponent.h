@@ -3,11 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "TBPBuffSystem.h"
 #include "Components/ActorComponent.h"
 #include "TBPBuffSystemComponent.generated.h"
 
 class UTBPBaseBuff;
 class ATBPBaseCharacter;
+
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnBuffChangedSignature, FText);
 
 USTRUCT()
 struct FBuffData
@@ -16,7 +19,7 @@ struct FBuffData
 	
 public:
 	UPROPERTY(Transient)
-	UTBPBaseBuff* Buff = nullptr;
+	const UTBPBaseBuff* Buff = nullptr;
 	
     FTimerHandle TickHandle;
     FTimerHandle EndHandle;
@@ -28,10 +31,14 @@ class TESTBUFFPROJECT_API UTBPBuffSystemComponent : public UActorComponent
     GENERATED_BODY()
 	
 public:
-	UTBPBuffSystemComponent();
+	
+	FOnBuffChangedSignature OnBuffChanged;
+	
+	virtual void OnRegister() override;
 	virtual void OnComponentDestroyed(bool bDestroyingHierarchy) override;
 
-	void ApplyBuff(UTBPBaseBuff* Buff);
+    FText GetBuffStatusText();
+	void ApplyBuff(const UTBPBaseBuff* Buff);
 
 protected:
 	
@@ -40,8 +47,8 @@ protected:
 	
 	//TODO: maybe use Map with key as FName or Tag
 	UPROPERTY(Transient)
-	TMap<TSubclassOf<UTBPBaseBuff>, FBuffData> AppliedBuffs;
+	TMap<ETBPBuffType, FBuffData> AppliedBuffs;
 
-	void TickBuff(UTBPBaseBuff* Buff, float DeltaTime);
-	void EndBuff(UClass* BuffClass);
+	void TickBuff(const UTBPBaseBuff* Buff, float DeltaTime);
+	void EndBuff(ETBPBuffType BuffType);
 };

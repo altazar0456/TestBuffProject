@@ -4,6 +4,11 @@
 #include "Health/TBPHealthComponent.h"
 #include "Player/TBPBaseCharacter.h"
 
+UTBPDamageOverTimeBuff::UTBPDamageOverTimeBuff()
+{
+	BuffType = ETBPBuffType::DamageOverTime;
+}
+
 void UTBPDamageOverTimeBuff::TickBuff(ATBPBaseCharacter* Target, float DeltaTime) const
 {
 	Super::TickBuff(Target, DeltaTime);

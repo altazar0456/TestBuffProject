@@ -16,6 +16,10 @@ class TESTBUFFPROJECT_API ATBPProjectile : public AActor
 public:
 	ATBPProjectile();
 	void SetShotDirection(const FVector& Direction);
+
+	//TODO: Move to Protected
+	UPROPERTY(VisibleAnywhere, Category = "Weapon")
+	UTBPBaseBuff* Buff = nullptr;
 	
 protected:
 	UPROPERTY(VisibleAnywhere, Category = "Weapon")
@@ -23,9 +27,6 @@ protected:
 	
 	UPROPERTY(VisibleAnywhere, Category = "Weapon")
 	UProjectileMovementComponent* MovementComponent;
-
-	UPROPERTY(VisibleAnywhere, Category = "Weapon")
-	UTBPBaseBuff* Buff;
 	
 	UPROPERTY(VisibleAnywhere, Category = "Weapon")
 	float Radius = 200.0f;

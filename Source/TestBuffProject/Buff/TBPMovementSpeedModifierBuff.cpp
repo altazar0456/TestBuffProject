@@ -4,6 +4,11 @@
 #include "Movement/TBPCharacterMovementComponent.h"
 #include "Player/TBPBaseCharacter.h"
 
+UTBPMovementSpeedModifierBuff::UTBPMovementSpeedModifierBuff()
+{
+	BuffType = ETBPBuffType::MovementSpeedModifier;
+}
+
 void UTBPMovementSpeedModifierBuff::Activate(ATBPBaseCharacter* Target) const
 {
 	//TODO: rewrite it

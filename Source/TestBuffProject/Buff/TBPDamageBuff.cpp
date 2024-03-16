@@ -5,6 +5,11 @@
 #include "Health/TBPHealthComponent.h"
 #include "Player/TBPBaseCharacter.h"
 
+UTBPDamageBuff::UTBPDamageBuff()
+{
+	BuffType = ETBPBuffType::InstantDamage;
+}
+
 void UTBPDamageBuff::Activate(ATBPBaseCharacter* Target) const
 {
 	Super::Activate(Target);

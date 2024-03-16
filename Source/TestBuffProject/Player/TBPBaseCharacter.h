@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "TBPBaseCharacter.generated.h"
 
+class UTextBlock;
 class UTBPHealthComponent;
 class UTBPWeaponComponent;
 class UWidgetComponent;
@@ -27,7 +28,7 @@ protected:
 	UTBPWeaponComponent* WeaponComponent;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
-	UWidgetComponent* HealthWidgetComponent;
+	UWidgetComponent* HealthBuffWidgetComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	UTBPBuffSystemComponent* BuffSystemComponent;
@@ -36,4 +37,6 @@ protected:
 	
 	void OnDeath();
     void OnHealthChanged(float Health);
+	
+	void OnBuffChanged(FText Health);
 };

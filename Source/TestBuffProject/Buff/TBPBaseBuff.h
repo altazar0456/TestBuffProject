@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "TBPBuffSystem.h"
 #include "UObject/Object.h"
 #include "TBPBaseBuff.generated.h"
 
@@ -16,11 +17,12 @@ class TESTBUFFPROJECT_API UTBPBaseBuff : public UObject
     GENERATED_BODY()
 	
 public:
+	ETBPBuffType BuffType = ETBPBuffType::Other;
+	
 	virtual void Activate(ATBPBaseCharacter* Target) const {}
 	virtual void TickBuff(ATBPBaseCharacter* Target, float DeltaTime) const {}
 	virtual void OnEndBuff(ATBPBaseCharacter* Target) const {}
-
-	//TODO: maybe move to properties or move to properties for derived durable class
+	
 	// Is it instant Buff or does it need time to execute
 	virtual bool IsInstant() const { return true; }
 	virtual float GetDuration() const { return 0.0f; }
@@ -39,11 +41,13 @@ class TESTBUFFPROJECT_API UTBPLastingBuff : public UTBPBaseBuff
 {
 	GENERATED_BODY()
 	
+public:
 	virtual bool IsInstant() const override { return false; }
 	virtual float GetDuration() const override { return Duration; }
 	virtual float GetTickPeriod() const override { return TickDeltaTime; }
 	
-protected:
+	//TODO: make properties protected. change the way of initialization
+//protected:
 	UPROPERTY(VisibleAnywhere, Category = "Buff", meta = (ClampMin = "0.0001", ClampMax = "1000.0"))
 	float Duration = 3.0f;
 	
