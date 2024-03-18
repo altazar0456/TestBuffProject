@@ -25,16 +25,14 @@ public:
 	void EquipWeapon(int32 WeaponIndex);
 
 protected:
-	virtual void BeginPlay() override;
-
-	void SpawnWeapons();
-
-private:
-	UPROPERTY()
+	UPROPERTY(Transient)
 	ATBPBaseWeapon* CurrentWeapon = nullptr;
 	
-	UPROPERTY()
+	UPROPERTY(Transient)
 	TArray<ATBPBaseWeapon*> Weapons;
 	
 	int32 CurrentWeaponIndex = 0;
+	
+	virtual void BeginPlay() override;
+	void SpawnWeapons();
 };

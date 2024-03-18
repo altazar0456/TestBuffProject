@@ -56,4 +56,7 @@ public:
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Buff")
 	UDataTable* BuffSettings = nullptr;
+	
+	UPROPERTY(Transient)
+	TMap<FGameplayTag, FTBPBuffSettings> BuffSettingsMap;
 };

@@ -20,6 +20,5 @@ void UTBPDamageBuff::Activate(ATBPBaseCharacter* Target)
 {
 	Super::Activate(Target);
 	
-	//TODO: rewrite it
-	Target->HealthComponent->ApplyDamage(Damage);
+	Target->GetHealthComponent()->ApplyDamage(Damage);
 }

@@ -19,7 +19,6 @@ void UTBPMovementSpeedModifierBuff::Activate(ATBPBaseCharacter* Target)
 {
 	Super::Activate(Target);
 	
-	//TODO: rewrite it
 	UTBPCharacterMovementComponent* MovementComponent = Cast<UTBPCharacterMovementComponent>(Target->GetMovementComponent());
 	if (MovementComponent)
 	{
@@ -29,7 +28,6 @@ void UTBPMovementSpeedModifierBuff::Activate(ATBPBaseCharacter* Target)
 
 void UTBPMovementSpeedModifierBuff::OnEndBuff(ATBPBaseCharacter* Target, bool bIsInterrupted)
 {
-	//TODO: rewrite it
 	UTBPCharacterMovementComponent* MovementComponent = Cast<UTBPCharacterMovementComponent>(Target->GetMovementComponent());
 	if (MovementComponent)
 	{

@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "TBPBaseWeapon.h"
-#include "Buff/TBPBuffSystem.h"
 #include "TBPLauncherWeapon.generated.h"
 
 class ATBPProjectile;

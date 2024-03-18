@@ -4,6 +4,8 @@
 #include "Health/TBPHealthComponent.h"
 #include "Player/TBPBaseCharacter.h"
 
+DEFINE_LOG_CATEGORY_STATIC(LogTBPDamageOverTimeBuff, All, All);
+
 UTBPDamageOverTimeBuff::UTBPDamageOverTimeBuff()
 {
 	bInstanced = true;
@@ -31,8 +33,8 @@ void UTBPDamageOverTimeBuff::TickBuff(ATBPBaseCharacter* Target, float DeltaTime
 	const float CurrentPercentTime = DeltaTime / Duration;
 	float CurrentDamage = CurrentPercentTime * Damage;
 	CurrentDamage = FMath::Min(CurrentDamage, RemainingDamage);
-	//TODO: rewrite it
-	Target->HealthComponent->ApplyDamage(CurrentDamage);
+	
+	Target->GetHealthComponent()->ApplyDamage(CurrentDamage);
 	AppliedDamage += CurrentDamage;
 }
 
@@ -44,11 +46,11 @@ void UTBPDamageOverTimeBuff::OnEndBuff(ATBPBaseCharacter* Target, bool bIsInterr
 
 		if(DeltaDamage < -KINDA_SMALL_NUMBER)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Character received more damage (%f) than expected"), -DeltaDamage);
+			UE_LOG(LogTBPDamageOverTimeBuff, Warning, TEXT("Character received more damage (%f) than expected"), -DeltaDamage);
 		}
 		else
 		{
-			Target->HealthComponent->ApplyDamage(DeltaDamage);
+			Target->GetHealthComponent()->ApplyDamage(DeltaDamage);
 		}
 	}
 	

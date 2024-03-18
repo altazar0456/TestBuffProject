@@ -1,4 +1,5 @@
 ﻿// Test Buff Project. All Rights Reserved.
+
 #pragma once
 
 #include "CoreMinimal.h"
@@ -17,8 +18,7 @@ public:
 	ATBPProjectile();
 	void SetShotDirection(const FVector& Direction);
 
-	//TODO: Move to Protected
-	UPROPERTY(VisibleAnywhere, Category = "Weapon")
+	UPROPERTY(Transient)
 	UTBPBaseBuff* Buff = nullptr;
 	
 protected:

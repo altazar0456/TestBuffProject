@@ -10,8 +10,7 @@
 class ATBPBaseCharacter;
 class UNiagaraSystem;
 
-//TODO: forbid to use this class for designers
-UCLASS()
+UCLASS(HideDropdown)
 class TESTBUFFPROJECT_API UTBPBaseBuff : public UObject
 {
     GENERATED_BODY()
@@ -41,8 +40,7 @@ protected:
 	bool bInstanced = false;
 };
 
-//TODO: forbid to use this class for designers
-UCLASS()
+UCLASS(HideDropdown)
 class TESTBUFFPROJECT_API UTBPLastingBuff : public UTBPBaseBuff
 {
 	GENERATED_BODY()

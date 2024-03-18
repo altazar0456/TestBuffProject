@@ -9,6 +9,8 @@
 #include "GameFramework/Character.h"
 #include "Kismet/GameplayStatics.h"
 
+DEFINE_LOG_CATEGORY_STATIC(LogTBPBaseWeapon, All, All);
+
 ATBPBaseWeapon::ATBPBaseWeapon()
 {
 	PrimaryActorTick.bCanEverTick = false;
@@ -43,7 +45,7 @@ bool ATBPBaseWeapon::IsFiring() const
 
 void ATBPBaseWeapon::MakeShot()
 {
-	UE_LOG(LogTemp, Log, TEXT("Shot projectile from Launcher weapon"));
+	UE_LOG(LogTBPBaseWeapon, Verbose, TEXT("Shot projectile from Launcher weapon"));
 	
 	FVector TraceStart;
 	FVector TraceEnd;

@@ -8,9 +8,19 @@
 #include "TBPBuffSystemComponent.h"
 #include "Weapon/TBPBaseWeapon.h"
 
+DEFINE_LOG_CATEGORY_STATIC(LogTBPBuffSystem, All, All);
+
 void UTBPBuffSystem::OnStartPlay()
 {
 	check(BuffSettings);
+	
+	TArray<FTBPBuffSettings*> BuffSettingsRows;
+	BuffSettings->GetAllRows<FTBPBuffSettings>(TEXT("BuffSettings"), BuffSettingsRows);
+	
+	for (const FTBPBuffSettings* CurrBuffSettingsRow : BuffSettingsRows)
+	{
+		BuffSettingsMap.Add(CurrBuffSettingsRow->BuffTag, *CurrBuffSettingsRow);
+	}
 }
 
 void UTBPBuffSystem::ApplyBuffInRadius(UWorld* World, UTBPBaseBuff* Buff, const FVector& Location, float Radius) const
@@ -24,7 +34,6 @@ void UTBPBuffSystem::ApplyBuffInRadius(UWorld* World, UTBPBaseBuff* Buff, const 
 	FCollisionShape SphereShape;
 	SphereShape.SetSphere(Radius);
 
-	//TODO: replace to async function.
 	const bool bHit = World->OverlapMultiByChannel(OutOverlaps, Location, FQuat::Identity, ECollisionChannel::ECC_Visibility, SphereShape);
 
 	if (bHit)
@@ -53,7 +62,7 @@ ATBPProjectile* UTBPBuffSystem::SpawnProjectile(UWorld* World, ATBPBaseWeapon* W
 {
 	if (!World || !Weapon || !Weapon->ProjectileClass)
 	{
-		UE_LOG(LogTemp, Log, TEXT("No World or Weapon to spawn projectile"));
+		UE_LOG(LogTBPBuffSystem, Log, TEXT("No World or Weapon to spawn projectile"));
 		return nullptr;
 	}
 	
@@ -75,24 +84,11 @@ ATBPProjectile* UTBPBuffSystem::SpawnProjectile(UWorld* World, ATBPBaseWeapon* W
 
 void UTBPBuffSystem::SetProjectileParameters(ATBPProjectile* Projectile, const FGameplayTag& BuffTag) const
 {
-	//TODO: cache values? Replace TEXT to something from reflection
-	//TODO: make Maps with this key
-	TArray<FTBPBuffSettings*> BuffSettingsRows;
-	BuffSettings->GetAllRows<FTBPBuffSettings>(TEXT("BuffSettings"), BuffSettingsRows);
-
-	FTBPBuffSettings* BuffSettingsRow = nullptr;
-	for (FTBPBuffSettings* CurrBuffSettingsRow : BuffSettingsRows)
-	{
-		if(CurrBuffSettingsRow->BuffTag == BuffTag)
-		{
-			BuffSettingsRow = CurrBuffSettingsRow;
-			break;
-		}
-	}
+	const FTBPBuffSettings* BuffSettingsRow = BuffSettingsMap.Find(BuffTag);
 
 	if(!BuffSettingsRow || BuffSettingsRow->BuffClass == nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Can't create buf for this Projectile. Check DataTable for Buffs"));
+		UE_LOG(LogTBPBuffSystem, Warning, TEXT("Can't create buf for this Projectile. Check DataTable for Buffs"));
 		Projectile->Buff = nullptr;
 		return;
 	}

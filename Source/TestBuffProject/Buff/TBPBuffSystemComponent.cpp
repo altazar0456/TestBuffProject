@@ -100,7 +100,6 @@ void UTBPBuffSystemComponent::EndBuff(UTBPBaseBuff* Buff, bool bIsInterrupted)
 	}	
 }
 
-//TODO: Maybe return const FText&, but then we will need to keep this text somewhere. But looks like FText will not copy all text
 FText UTBPBuffSystemComponent::GetBuffStatusText()
 {
 	if (AppliedBuffs.Num() == 0)
@@ -108,7 +107,6 @@ FText UTBPBuffSystemComponent::GetBuffStatusText()
 		return FText::GetEmpty();
 	}
 	
-	//TODO: Maybe construct FText instead of FString.
 	FString BuffStatus = "|";
 	for (auto BuffDataPair : AppliedBuffs)
 	{

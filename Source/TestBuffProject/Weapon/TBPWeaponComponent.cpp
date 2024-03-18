@@ -4,6 +4,8 @@
 #include "TBPBaseWeapon.h"
 #include "GameFramework/Character.h"
 
+DEFINE_LOG_CATEGORY_STATIC(LogTBPWeaponComponent, All, All);
+
 UTBPWeaponComponent::UTBPWeaponComponent()
 {
 }
@@ -36,7 +38,7 @@ void UTBPWeaponComponent::SpawnWeapons()
 	
 	for (TSubclassOf<ATBPBaseWeapon> WeaponClass : WeaponClasses)
 	{
-		ATBPBaseWeapon* Weapon = GetWorld()->SpawnActor<ATBPBaseWeapon>(WeaponClass);
+		ATBPBaseWeapon* Weapon = World->SpawnActor<ATBPBaseWeapon>(WeaponClass);
 		if (!Weapon) continue;
 
 		Weapon->SetOwner(Character);
@@ -52,13 +54,7 @@ void UTBPWeaponComponent::EquipWeapon(int32 WeaponIndex)
 {
 	if (WeaponIndex < 0 || WeaponIndex >= Weapons.Num())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Invalid weapon index"));
-		return;
-	}
-	
-	ACharacter* Character = Cast<ACharacter>(GetOwner());
-	if (!Character)
-	{
+		UE_LOG(LogTBPWeaponComponent, Warning, TEXT("Invalid weapon index"));
 		return;
 	}
 
@@ -67,7 +63,6 @@ void UTBPWeaponComponent::EquipWeapon(int32 WeaponIndex)
 		CurrentWeapon->StopFire();
 		CurrentWeapon->SetActorHiddenInGame(true);
 	}
-	
 	
 	CurrentWeapon = Weapons[WeaponIndex];
 	CurrentWeapon->SetActorHiddenInGame(false);

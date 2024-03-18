@@ -11,7 +11,7 @@ void UTBPLastingBuff::Activate(ATBPBaseCharacter* Target)
 	
 	if (BuffVFX)
 	{
-		Target->VFXComponent->ApplyEffect(BuffVFX);
+		Target->GetVFXComponent()->ApplyEffect(BuffVFX);
 	}
 }
 
@@ -19,7 +19,7 @@ void UTBPLastingBuff::OnEndBuff(ATBPBaseCharacter* Target, bool bIsInterrupted)
 {	
 	if (BuffVFX)
 	{
-		Target->VFXComponent->FinishEffect(BuffVFX);
+		Target->GetVFXComponent()->FinishEffect(BuffVFX);
 	}
 	
 	Super::OnEndBuff(Target, bIsInterrupted);

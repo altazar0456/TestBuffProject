@@ -20,13 +20,9 @@ class TESTBUFFPROJECT_API ATBPBaseCharacter : public ACharacter
 public:
 	ATBPBaseCharacter(const FObjectInitializer& ObjInit);
 
-	//TODO: Move to protected
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
-	UTBPHealthComponent* HealthComponent;
+	UTBPHealthComponent* GetHealthComponent() const { return HealthComponent; }
 	
-	//TODO: Move to protected
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
-	UTBPCharacterVFXComponent* VFXComponent;
+	UTBPCharacterVFXComponent* GetVFXComponent() const { return VFXComponent; }
 	
 protected:
 	
@@ -38,6 +34,12 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	UTBPBuffSystemComponent* BuffSystemComponent;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
+	UTBPHealthComponent* HealthComponent;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
+	UTBPCharacterVFXComponent* VFXComponent;
 	
 	virtual void BeginPlay() override;
 	

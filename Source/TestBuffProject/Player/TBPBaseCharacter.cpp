@@ -12,6 +12,8 @@
 #include "Movement/TBPCharacterMovementComponent.h"
 #include "UI/TBPHealthBarBuffWidget.h"
 
+DEFINE_LOG_CATEGORY_STATIC(LogTBPBaseCharacter, All, All);
+
 ATBPBaseCharacter::ATBPBaseCharacter(const FObjectInitializer& ObjInit)
 : Super(ObjInit.SetDefaultSubobjectClass<UTBPCharacterMovementComponent>(ACharacter::CharacterMovementComponentName))
 {
@@ -64,7 +66,7 @@ void ATBPBaseCharacter::BeginPlay()
 
 void ATBPBaseCharacter::OnDeath()
 {
-	UE_LOG(LogTemp, Display, TEXT("%s is dead"), *GetName());
+	UE_LOG(LogTBPBaseCharacter, Display, TEXT("%s is dead"), *GetName());
 	
 	GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 	WeaponComponent->StopFire();

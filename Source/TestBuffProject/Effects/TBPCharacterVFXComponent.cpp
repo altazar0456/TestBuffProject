@@ -10,7 +10,7 @@ void UTBPCharacterVFXComponent::OnRegister()
 {
 	Super::OnRegister();
 
-	ATBPBaseCharacter* Character = Cast<ATBPBaseCharacter>(GetOwner());
+	const ATBPBaseCharacter* Character = Cast<ATBPBaseCharacter>(GetOwner());
 	check(Character);
 	CharacterMesh = Character->GetMesh();
 	check(CharacterMesh);
