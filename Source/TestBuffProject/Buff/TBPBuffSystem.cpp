@@ -45,12 +45,10 @@ void UTBPBuffSystem::ApplyBuffInRadius(UWorld* World, UTBPBaseBuff* Buff, const 
 				BuffSystemComponent->ApplyBuff(CurrentBuff);				
 			}
 		}
-	
-		//DrawDebugSphere(World, Location, Radius, 32, FColor::Orange, false, 3.0f, 0, 3.0f);
 	}
 }
 
-ATBPProjectile* UTBPBuffSystem::SpawnProjectile(UWorld* World, ATBPBaseWeapon* Weapon, ETBPBuffType ProjectileBuffType,
+ATBPProjectile* UTBPBuffSystem::SpawnProjectile(UWorld* World, ATBPBaseWeapon* Weapon, const FGameplayTag& BuffTag,
 	const FVector& Location, const FVector& Direction) const
 {
 	if (!World || !Weapon || !Weapon->ProjectileClass)
@@ -67,7 +65,7 @@ ATBPProjectile* UTBPBuffSystem::SpawnProjectile(UWorld* World, ATBPBaseWeapon* W
 		Projectile->SetShotDirection(Direction);
 		Projectile->SetOwner(Weapon);
 		
-		SetProjectileParameters(Projectile, ProjectileBuffType);
+		SetProjectileParameters(Projectile, BuffTag);
 		
 		Projectile->FinishSpawning(SpawnTransform);
 	}
@@ -75,7 +73,7 @@ ATBPProjectile* UTBPBuffSystem::SpawnProjectile(UWorld* World, ATBPBaseWeapon* W
 	return Projectile;
 }
 
-void UTBPBuffSystem::SetProjectileParameters(ATBPProjectile* Projectile, ETBPBuffType ProjectileBuffType) const
+void UTBPBuffSystem::SetProjectileParameters(ATBPProjectile* Projectile, const FGameplayTag& BuffTag) const
 {
 	//TODO: cache values? Replace TEXT to something from reflection
 	//TODO: make Maps with this key
@@ -85,14 +83,14 @@ void UTBPBuffSystem::SetProjectileParameters(ATBPProjectile* Projectile, ETBPBuf
 	FTBPBuffSettings* BuffSettingsRow = nullptr;
 	for (FTBPBuffSettings* CurrBuffSettingsRow : BuffSettingsRows)
 	{
-		if(CurrBuffSettingsRow->BuffType == ProjectileBuffType)
+		if(CurrBuffSettingsRow->BuffTag == BuffTag)
 		{
 			BuffSettingsRow = CurrBuffSettingsRow;
 			break;
 		}
 	}
 
-	if(!BuffSettingsRow || ProjectileBuffType == ETBPBuffType::Other || BuffSettingsRow->BuffClass == nullptr)
+	if(!BuffSettingsRow || BuffSettingsRow->BuffClass == nullptr)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Can't create buf for this Projectile. Check DataTable for Buffs"));
 		Projectile->Buff = nullptr;

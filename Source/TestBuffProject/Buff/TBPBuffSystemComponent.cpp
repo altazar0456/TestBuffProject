@@ -43,7 +43,7 @@ void UTBPBuffSystemComponent::ApplyBuff(UTBPBaseBuff* Buff)
 	}
 	
 	// Can be only one Buff at the same type
-	EndBuff(Buff->BuffType, true);
+	EndBuff(Buff, true);
 
 	Buff->Activate(CharacterOwner);
 
@@ -62,10 +62,10 @@ void UTBPBuffSystemComponent::ApplyBuff(UTBPBaseBuff* Buff)
 	
 	FTimerDelegate TickDelegate = FTimerDelegate::CreateUObject( this, &UTBPBuffSystemComponent::TickBuff, Buff, BuffDeltaTime);	
 	World->GetTimerManager().SetTimer(BuffData.TickHandle, TickDelegate, BuffDeltaTime, true);
-	FTimerDelegate EndDelegate = FTimerDelegate::CreateUObject(this, &UTBPBuffSystemComponent::EndBuff, Buff->BuffType, false);	
+	FTimerDelegate EndDelegate = FTimerDelegate::CreateUObject(this, &UTBPBuffSystemComponent::EndBuff, Buff, false);	
 	World->GetTimerManager().SetTimer(BuffData.EndHandle, EndDelegate, BuffDuration, false);
 	
-	AppliedBuffs.Add(Buff->BuffType, BuffData);
+	AppliedBuffs.Add(Buff->GetGameplayTag(), BuffData);
 
 	OnBuffChanged.Broadcast(GetBuffStatusText());
 }
@@ -75,15 +75,16 @@ void UTBPBuffSystemComponent::TickBuff(UTBPBaseBuff* Buff, float DeltaTime)
 	Buff->TickBuff(CharacterOwner, DeltaTime);
 }
 
-void UTBPBuffSystemComponent::EndBuff(ETBPBuffType BuffType, bool bIsInterrupted)
+void UTBPBuffSystemComponent::EndBuff(UTBPBaseBuff* Buff, bool bIsInterrupted)
 {
 	UWorld* World = GetWorld();
-	if(!World)
+	if(!World || !Buff)
 	{
 		return;
 	}
 	
-	FBuffData* BuffData = AppliedBuffs.Find(BuffType);
+	const FGameplayTag& BuffTag = Buff->GetGameplayTag();
+	FBuffData* BuffData = AppliedBuffs.Find(BuffTag);
 	if (BuffData)
 	{
         World->GetTimerManager().ClearTimer(BuffData->TickHandle);
@@ -94,7 +95,7 @@ void UTBPBuffSystemComponent::EndBuff(ETBPBuffType BuffType, bool bIsInterrupted
 			BuffData->Buff->OnEndBuff(CharacterOwner, bIsInterrupted);
 		}
 		
-		AppliedBuffs.Remove(BuffType);
+		AppliedBuffs.Remove(BuffTag);
 		OnBuffChanged.Broadcast(GetBuffStatusText());
 	}	
 }
@@ -113,7 +114,12 @@ FText UTBPBuffSystemComponent::GetBuffStatusText()
 	{
 		const FBuffData& BuffData = BuffDataPair.Value;
 
-		BuffStatus += BuffData.Buff->GetName() + "|";
+		if(!BuffData.Buff)
+		{
+			continue;
+		}
+		const FGameplayTag& Tag = BuffData.Buff->GetGameplayTag();
+		BuffStatus += Tag.GetTagName().ToString() + "|";
 	}
 	
 	return FText::FromString(BuffStatus);

@@ -7,7 +7,6 @@
 
 UTBPDamageBuff::UTBPDamageBuff()
 {
-	BuffType = ETBPBuffType::InstantDamage;
 }
 
 void UTBPDamageBuff::SetParameters(const FTBPBuffSettings& BuffSettings)

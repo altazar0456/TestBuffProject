@@ -6,7 +6,6 @@
 
 UTBPMovementSpeedModifierBuff::UTBPMovementSpeedModifierBuff()
 {
-	BuffType = ETBPBuffType::MovementSpeedModifier;
 }
 
 void UTBPMovementSpeedModifierBuff::SetParameters(const FTBPBuffSettings& BuffSettings)

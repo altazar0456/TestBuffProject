@@ -55,8 +55,6 @@ void ATBPProjectile::OnProjectileHit(UPrimitiveComponent* PrimitiveComponent, AA
 		GameMode->BuffSystem->ApplyBuffInRadius(GetWorld(), Buff, HitResult.ImpactPoint, Radius);
 		
 		DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, Radius, 32, FColor::Orange, false, 3.0f, 0, 3.0f);
-		//TODO: Define show dbg option
-		//DrawDebugLine(GetWorld(), HitResult.ImpactPoint, HitResult.ImpactPoint + FVector::UpVector * 1000, FColor::Orange, false, 3.0f, 0, 3.0f);
 	}
 
 	Destroy();

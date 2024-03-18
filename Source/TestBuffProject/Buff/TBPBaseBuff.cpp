@@ -32,4 +32,5 @@ void UTBPLastingBuff::SetParameters(const FTBPBuffSettings& BuffSettings)
 	Duration = BuffSettings.Duration;
 	TickDeltaTime = BuffSettings.TickDeltaTime;
 	BuffVFX = BuffSettings.BuffVFX;
+	BuffTag = BuffSettings.BuffTag;
 }

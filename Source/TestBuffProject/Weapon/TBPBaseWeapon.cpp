@@ -54,10 +54,7 @@ void ATBPBaseWeapon::MakeShot()
 		
 		const FVector Direction = (TraceEnd - TraceStart).GetSafeNormal();
 		
-		GameMode->BuffSystem->SpawnProjectile(GetWorld(), this, ProjectileBuffType, TraceStart, Direction);
-
-		//TODO: Define show dbg option
-		//DrawDebugLine(GetWorld(), TraceStart, TraceEnd, FColor::Orange, false, 3.0f, 0, 3.0f);
+		GameMode->BuffSystem->SpawnProjectile(GetWorld(), this, BuffTag, TraceStart, Direction);
 	}
 }
 

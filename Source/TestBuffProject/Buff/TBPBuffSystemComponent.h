@@ -45,10 +45,9 @@ protected:
 	UPROPERTY(Transient)
 	ATBPBaseCharacter* CharacterOwner;
 	
-	//TODO: maybe use Map with key as FName or Tag
 	UPROPERTY(Transient)
-	TMap<ETBPBuffType, FBuffData> AppliedBuffs;
+	TMap<FGameplayTag, FBuffData> AppliedBuffs;
 
 	void TickBuff(UTBPBaseBuff* Buff, float DeltaTime);
-	void EndBuff(ETBPBuffType BuffType, bool bIsInterrupted);
+	void EndBuff(UTBPBaseBuff* Buff, bool bIsInterrupted);
 };

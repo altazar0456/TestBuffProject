@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "Engine/DataTable.h"
 #include "TBPBuffSystem.generated.h"
 
@@ -12,23 +13,13 @@ class ATBPProjectile;
 class UTBPBaseBuff;
 class UNiagaraSystem;
 
-//TODO: Maybe replace to strings or Gameplay Tags, so it can be extended in blueprint?
-UENUM(BlueprintType)
-enum class ETBPBuffType : uint8
-{
-	InstantDamage,
-	DamageOverTime,
-	MovementSpeedModifier,
-	Other
-};
-
 USTRUCT(BlueprintType)
 struct FTBPBuffSettings : public FTableRowBase
 {
 	GENERATED_BODY()
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-	ETBPBuffType BuffType;
+	FGameplayTag BuffTag;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	TSubclassOf<UTBPBaseBuff> BuffClass;
@@ -57,14 +48,10 @@ public:
 	
 	void ApplyBuffInRadius(UWorld* World, UTBPBaseBuff* Buff, const FVector& Location, float Radius) const;
 
-	//TODO: Move to some class
-	//TODO: Maybe it will be some manager inside GameState or GameMode or GameInstance or somewhere there
-	//TODO: so we will have a link for DataTable
-	//TODO: Maybe move there whole TBPBuffSystem namespace and make it class
-	ATBPProjectile* SpawnProjectile(UWorld* World, ATBPBaseWeapon* Weapon, ETBPBuffType ProjectileBuffType,
+	ATBPProjectile* SpawnProjectile(UWorld* World, ATBPBaseWeapon* Weapon, const FGameplayTag& BuffTag,
 		const FVector& Location, const FVector& Direction) const;
 
-	void SetProjectileParameters(ATBPProjectile* Projectile, ETBPBuffType ProjectileBuffType) const;
+	void SetProjectileParameters(ATBPProjectile* Projectile, const FGameplayTag& BuffTag) const;
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Buff")

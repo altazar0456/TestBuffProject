@@ -6,7 +6,6 @@
 
 UTBPDamageOverTimeBuff::UTBPDamageOverTimeBuff()
 {
-	BuffType = ETBPBuffType::DamageOverTime;
 	bInstanced = true;
 }
 
@@ -28,8 +27,10 @@ void UTBPDamageOverTimeBuff::TickBuff(ATBPBaseCharacter* Target, float DeltaTime
 {
 	Super::TickBuff(Target, DeltaTime);
 
+	const float RemainingDamage = Damage - AppliedDamage;
 	const float CurrentPercentTime = DeltaTime / Duration;
-	const float CurrentDamage = CurrentPercentTime * Damage;
+	float CurrentDamage = CurrentPercentTime * Damage;
+	CurrentDamage = FMath::Min(CurrentDamage, RemainingDamage);
 	//TODO: rewrite it
 	Target->HealthComponent->ApplyDamage(CurrentDamage);
 	AppliedDamage += CurrentDamage;
@@ -41,9 +42,9 @@ void UTBPDamageOverTimeBuff::OnEndBuff(ATBPBaseCharacter* Target, bool bIsInterr
 	{
 		const float DeltaDamage = Damage - AppliedDamage;
 
-		if(DeltaDamage < 0)
+		if(DeltaDamage < -KINDA_SMALL_NUMBER)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Character received more damage than expected"));
+			UE_LOG(LogTemp, Warning, TEXT("Character received more damage (%f) than expected"), -DeltaDamage);
 		}
 		else
 		{

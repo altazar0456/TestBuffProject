@@ -17,9 +17,7 @@ class TESTBUFFPROJECT_API UTBPBaseBuff : public UObject
     GENERATED_BODY()
 	
 public:
-	ETBPBuffType BuffType = ETBPBuffType::Other;
-
-	bool IsInstanced() { return bInstanced; }
+	bool IsInstanced() const { return bInstanced; }
 	
 	virtual void Activate(ATBPBaseCharacter* Target) {}
 	virtual void TickBuff(ATBPBaseCharacter* Target, float DeltaTime) {}
@@ -29,10 +27,15 @@ public:
 	virtual bool IsInstant() const { return true; }
 	virtual float GetDuration() const { return 0.0f; }
 	virtual float GetTickPeriod() const { return 0.1f; }
+
+	const FGameplayTag& GetGameplayTag() const { return BuffTag; }
 	
 	virtual void SetParameters(const FTBPBuffSettings& BuffSettings) {}
 	
 protected:	
+	UPROPERTY(EditAnywhere, Category = "Buff")
+	FGameplayTag BuffTag;
+	
 	// In case buff need to store runtime data in properties need to set it true  
 	UPROPERTY(VisibleAnywhere, Category = "Advanced")
 	bool bInstanced = false;

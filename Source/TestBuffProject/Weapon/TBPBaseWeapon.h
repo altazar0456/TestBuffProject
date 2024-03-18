@@ -27,7 +27,7 @@ public:
 protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
-	ETBPBuffType ProjectileBuffType;
+	FGameplayTag BuffTag;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	USkeletalMeshComponent* WeaponMesh;
