@@ -11,6 +11,7 @@ class UTBPHealthComponent;
 class UTBPWeaponComponent;
 class UWidgetComponent;
 class UTBPBuffSystemComponent;
+class UTBPCharacterVFXComponent;
 
 UCLASS()
 class TESTBUFFPROJECT_API ATBPBaseCharacter : public ACharacter
@@ -22,6 +23,11 @@ public:
 	//TODO: Move to protected
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	UTBPHealthComponent* HealthComponent;
+	
+	//TODO: Move to protected
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
+	UTBPCharacterVFXComponent* VFXComponent;
+	
 protected:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")

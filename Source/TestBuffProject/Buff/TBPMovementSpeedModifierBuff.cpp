@@ -18,6 +18,8 @@ void UTBPMovementSpeedModifierBuff::SetParameters(const FTBPBuffSettings& BuffSe
 
 void UTBPMovementSpeedModifierBuff::Activate(ATBPBaseCharacter* Target)
 {
+	Super::Activate(Target);
+	
 	//TODO: rewrite it
 	UTBPCharacterMovementComponent* MovementComponent = Cast<UTBPCharacterMovementComponent>(Target->GetMovementComponent());
 	if (MovementComponent)
@@ -35,4 +37,5 @@ void UTBPMovementSpeedModifierBuff::OnEndBuff(ATBPBaseCharacter* Target, bool bI
 		MovementComponent->SetSpeedModifier(1.0f);
 	}
 	
+	Super::OnEndBuff(Target, bIsInterrupted);	
 }

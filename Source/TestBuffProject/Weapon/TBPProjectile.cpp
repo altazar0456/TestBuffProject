@@ -2,6 +2,7 @@
 
 #include "TBPProjectile.h"
 
+#include "DrawDebugHelpers.h"
 #include "TBPBaseGameMode.h"
 #include "Buff/TBPBuffSystem.h"
 #include "Buff/TBPMovementSpeedModifierBuff.h"
@@ -42,21 +43,20 @@ void ATBPProjectile::SetShotDirection(const FVector& Direction)
 
 void ATBPProjectile::OnProjectileHit(UPrimitiveComponent* PrimitiveComponent, AActor* Actor, UPrimitiveComponent* PrimitiveComponent1, FVector Vector, const FHitResult& HitResult)
 {
-	UWorld* World = GetWorld();
-	if(!World)
-	{
-		return;
-	}
-
 	MovementComponent->StopMovementImmediately();
 
 	const ATBPBaseGameMode* GameMode = Cast<ATBPBaseGameMode>(UGameplayStatics::GetGameMode(this));
 	check(GameMode);
 	check(GameMode->BuffSystem);
+	check(GetWorld())
 	
-	if(Buff && GameMode)
+	if(Buff)
 	{
-		GameMode->BuffSystem->ApplyBuffInRadius(World, Buff, HitResult.ImpactPoint, Radius);
+		GameMode->BuffSystem->ApplyBuffInRadius(GetWorld(), Buff, HitResult.ImpactPoint, Radius);
+		
+		DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, Radius, 32, FColor::Orange, false, 3.0f, 0, 3.0f);
+		//TODO: Define show dbg option
+		//DrawDebugLine(GetWorld(), HitResult.ImpactPoint, HitResult.ImpactPoint + FVector::UpVector * 1000, FColor::Orange, false, 3.0f, 0, 3.0f);
 	}
 
 	Destroy();

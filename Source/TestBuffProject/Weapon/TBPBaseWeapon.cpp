@@ -15,6 +15,8 @@ ATBPBaseWeapon::ATBPBaseWeapon()
 
 	WeaponMesh = CreateDefaultSubobject<USkeletalMeshComponent>("WeaponMesh");
 	SetRootComponent(WeaponMesh);
+	
+	ProjectileClass = ATBPProjectile::StaticClass();
 }
 
 void ATBPBaseWeapon::BeginPlay()
@@ -53,8 +55,9 @@ void ATBPBaseWeapon::MakeShot()
 		const FVector Direction = (TraceEnd - TraceStart).GetSafeNormal();
 		
 		GameMode->BuffSystem->SpawnProjectile(GetWorld(), this, ProjectileBuffType, TraceStart, Direction);
-		
-		DrawDebugLine(GetWorld(), TraceStart, TraceEnd, FColor::Orange, false, 3.0f, 0, 3.0f);
+
+		//TODO: Define show dbg option
+		//DrawDebugLine(GetWorld(), TraceStart, TraceEnd, FColor::Orange, false, 3.0f, 0, 3.0f);
 	}
 }
 

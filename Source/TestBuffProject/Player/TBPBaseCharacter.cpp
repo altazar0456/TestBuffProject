@@ -7,6 +7,7 @@
 #include "Weapon/TBPWeaponComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/WidgetComponent.h"
+#include "Effects/TBPCharacterVFXComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Movement/TBPCharacterMovementComponent.h"
 #include "UI/TBPHealthBarBuffWidget.h"
@@ -36,6 +37,8 @@ ATBPBaseCharacter::ATBPBaseCharacter(const FObjectInitializer& ObjInit)
 	HealthBuffWidgetComponent->SetupAttachment(GetRootComponent());
 	HealthBuffWidgetComponent->SetWidgetSpace(EWidgetSpace::Screen);
 	HealthBuffWidgetComponent->SetDrawAtDesiredSize(true);
+
+	VFXComponent = CreateDefaultSubobject<UTBPCharacterVFXComponent>("UTBPCharacterVFXComponent");
 }
 
 void ATBPBaseCharacter::BeginPlay()
@@ -46,6 +49,7 @@ void ATBPBaseCharacter::BeginPlay()
 	check(WeaponComponent);
 	check(BuffSystemComponent);
     check(HealthBuffWidgetComponent);
+    check(VFXComponent);
 	check(GetCharacterMovement());
 	check(GetCapsuleComponent());
 	check(GetMesh());

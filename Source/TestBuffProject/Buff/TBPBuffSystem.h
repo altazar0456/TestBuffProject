@@ -10,6 +10,7 @@ class UWorld;
 class ATBPBaseWeapon;
 class ATBPProjectile;
 class UTBPBaseBuff;
+class UNiagaraSystem;
 
 //TODO: Maybe replace to strings or Gameplay Tags, so it can be extended in blueprint?
 UENUM(BlueprintType)
@@ -40,6 +41,9 @@ struct FTBPBuffSettings : public FTableRowBase
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	float Value = 0.0f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	UNiagaraSystem* BuffVFX = nullptr;
 };
 
 UCLASS(Blueprintable, BlueprintType)

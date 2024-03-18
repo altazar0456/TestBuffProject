@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "TBPProjectile.h"
 #include "Buff/TBPBuffSystem.h"
 #include "TBPBaseWeapon.generated.h"
 
@@ -15,6 +16,9 @@ class TESTBUFFPROJECT_API ATBPBaseWeapon : public AActor
 	GENERATED_BODY()
 public:
 	ATBPBaseWeapon();
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
+	TSubclassOf<ATBPProjectile> ProjectileClass;
 	
 	virtual void StartFire();
 	virtual void StopFire();

@@ -8,6 +8,7 @@
 #include "TBPBaseBuff.generated.h"
 
 class ATBPBaseCharacter;
+class UNiagaraSystem;
 
 //TODO: forbid to use this class for designers
 UCLASS()
@@ -44,6 +45,10 @@ class TESTBUFFPROJECT_API UTBPLastingBuff : public UTBPBaseBuff
 	GENERATED_BODY()
 	
 public:
+	
+	virtual void Activate(ATBPBaseCharacter* Target) override;
+	virtual void OnEndBuff(ATBPBaseCharacter* Target, bool bIsInterrupted) override;
+	
 	virtual bool IsInstant() const override { return false; }
 	virtual float GetDuration() const override { return Duration; }
 	virtual float GetTickPeriod() const override { return TickDeltaTime; }
@@ -56,4 +61,7 @@ protected:
 	
 	UPROPERTY(VisibleAnywhere, Category = "Buff", meta = (ClampMin = "0.0001", ClampMax = "1000.0"))
 	float TickDeltaTime = 1.0f;
+
+	UPROPERTY(VisibleAnywhere, Category = "VFX")
+	UNiagaraSystem* BuffVFX = nullptr;	
 };

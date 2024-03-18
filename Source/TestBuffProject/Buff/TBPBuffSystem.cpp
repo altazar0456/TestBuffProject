@@ -2,6 +2,7 @@
 
 #include "TBPBuffSystem.h"
 
+#include "DrawDebugHelpers.h"
 #include "TBPBaseBuff.h"
 #include "Weapon/TBPProjectile.h"
 #include "TBPBuffSystemComponent.h"
@@ -23,7 +24,7 @@ void UTBPBuffSystem::ApplyBuffInRadius(UWorld* World, UTBPBaseBuff* Buff, const 
 	FCollisionShape SphereShape;
 	SphereShape.SetSphere(Radius);
 
-	//TODO: replace to async function. will need to use UObject class for this instead. Maybe it will be "SingleTone" part of GameInstance
+	//TODO: replace to async function.
 	const bool bHit = World->OverlapMultiByChannel(OutOverlaps, Location, FQuat::Identity, ECollisionChannel::ECC_Visibility, SphereShape);
 
 	if (bHit)
@@ -41,26 +42,26 @@ void UTBPBuffSystem::ApplyBuffInRadius(UWorld* World, UTBPBaseBuff* Buff, const 
 			
 			if(BuffSystemComponent)
 			{
-				//TODO: check that it's okay to paste one buff everywhere
 				BuffSystemComponent->ApplyBuff(CurrentBuff);				
 			}
 		}
+	
+		//DrawDebugSphere(World, Location, Radius, 32, FColor::Orange, false, 3.0f, 0, 3.0f);
 	}
 }
 
 ATBPProjectile* UTBPBuffSystem::SpawnProjectile(UWorld* World, ATBPBaseWeapon* Weapon, ETBPBuffType ProjectileBuffType,
 	const FVector& Location, const FVector& Direction) const
 {
-	//TODO: Add DataTable to condition
-	//TODO: Get data from DataTable
-	if (!World || !Weapon)
+	if (!World || !Weapon || !Weapon->ProjectileClass)
 	{
+		UE_LOG(LogTemp, Log, TEXT("No World or Weapon to spawn projectile"));
 		return nullptr;
 	}
 	
 	const FTransform SpawnTransform(FRotator::ZeroRotator, Location);
 
-	ATBPProjectile* Projectile = World->SpawnActorDeferred<ATBPProjectile>(ATBPProjectile::StaticClass(), SpawnTransform);
+	ATBPProjectile* Projectile = World->SpawnActorDeferred<ATBPProjectile>(Weapon->ProjectileClass, SpawnTransform);
 	if(Projectile)
 	{
 		Projectile->SetShotDirection(Direction);
@@ -77,7 +78,7 @@ ATBPProjectile* UTBPBuffSystem::SpawnProjectile(UWorld* World, ATBPBaseWeapon* W
 void UTBPBuffSystem::SetProjectileParameters(ATBPProjectile* Projectile, ETBPBuffType ProjectileBuffType) const
 {
 	//TODO: cache values? Replace TEXT to something from reflection
-	//TODO: make Maps with this key inside GameMode or some inherited class
+	//TODO: make Maps with this key
 	TArray<FTBPBuffSettings*> BuffSettingsRows;
 	BuffSettings->GetAllRows<FTBPBuffSettings>(TEXT("BuffSettings"), BuffSettingsRows);
 
@@ -87,6 +88,7 @@ void UTBPBuffSystem::SetProjectileParameters(ATBPProjectile* Projectile, ETBPBuf
 		if(CurrBuffSettingsRow->BuffType == ProjectileBuffType)
 		{
 			BuffSettingsRow = CurrBuffSettingsRow;
+			break;
 		}
 	}
 

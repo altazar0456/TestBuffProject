@@ -28,7 +28,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "Weapon")
 	UProjectileMovementComponent* MovementComponent;
 	
-	UPROPERTY(VisibleAnywhere, Category = "Weapon")
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
 	float Radius = 200.0f;
 
 	virtual void BeginPlay() override;
